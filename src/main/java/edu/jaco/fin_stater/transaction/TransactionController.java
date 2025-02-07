@@ -46,4 +46,10 @@ public class TransactionController {
         statsManager.calculateBalanceMonthly();
         statsManager.calculateCategorized();
     }
+
+    @CrossOrigin
+    @PatchMapping("/transaction/{id}")
+    public void toogleTransactionForStats(@RequestHeader("mode") String mode, @PathVariable Integer id) {
+
+    }
 }

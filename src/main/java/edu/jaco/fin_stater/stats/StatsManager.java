@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class StatsManager {
@@ -243,20 +244,28 @@ public class StatsManager {
     }
 
     public void calculateBalance() {
+        List<Transaction> transactions = transactionRespository.findAll();
+
         Comparator<Transaction> transactionDateComparator = Comparator.comparing(Transaction::getDate);
-        Optional<Transaction> minTransactionDate = transactionRespository.findAll().stream().min(transactionDateComparator);
-        Optional<Transaction> maxTransactionDate = transactionRespository.findAll().stream().max(transactionDateComparator);
-        double income = transactionRespository.findAll().stream()
+        Optional<Transaction> minTransactionDate = transactions.stream().min(transactionDateComparator);
+        Optional<Transaction> maxTransactionDate = transactions.stream().max(transactionDateComparator);
+
+        double income = transactions.stream()
+                .filter(tr -> tr.isUsedForCalculation())
                 .mapToDouble(tr -> tr.getAmount())
                 .filter(am -> am > 0.0)
                 .sum();
 
-        double expenses = transactionRespository.findAll().stream()
+        double expenses = transactions.stream()
+                .filter(tr -> tr.isUsedForCalculation())
                 .mapToDouble(tr -> tr.getAmount())
                 .filter(am -> am < 0.0)
                 .sum();
 
-        double balance = transactionRespository.findAll().stream().mapToDouble(tr -> tr.getAmount()).sum();
+        double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
+
+        if (balanceRepository.count() != 0) balanceRepository.deleteAll();
+
         balanceRepository.save(new Balance(minTransactionDate.get().getDate(),
                 maxTransactionDate.get().getDate(), income, expenses, balance));
     }
@@ -265,7 +274,12 @@ public class StatsManager {
         Map<Integer, Map<String, Double>> result = new HashMap<>();
         Calendar calendar = Calendar.getInstance();
 
-        for(Transaction transaction: transactionRespository.findAll())
+        List<Transaction> transactions = transactionRespository.findAll()
+                .stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .collect(Collectors.toList());
+
+        for(Transaction transaction: transactions)
         {
             calendar.setTime(transaction.getDate());
             for(int month = Calendar.JANUARY; month <= Calendar.DECEMBER; month++) {
@@ -293,20 +307,31 @@ public class StatsManager {
             }
         }
 
+        if (balanceMonthlyRepository.count() != 0) balanceMonthlyRepository.deleteAll();
+
         for(Map.Entry<Integer, Map<String, Double>> monthEntry: result.entrySet()) {
             Double income = monthEntry.getValue().get("income");
             Double expenses = monthEntry.getValue().get("expense");
             Double balance = income - (-1*expenses);
+
             calendar.set(Calendar.MONTH, monthEntry.getKey());
             String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.UK);
-            balanceMonthlyRepository.save(new BalanceMonthly(month, income, expenses, balance, (balance / income) * 100));
+
+            double rateOfReturn = (balance / income) * 100;
+
+            balanceMonthlyRepository.save(new BalanceMonthly(month, income, expenses, balance, rateOfReturn));
         }
     }
 
     public void calculateCategorized() {
         Map<TransactionCategory, Double> result = new HashMap<>();
 
-        for(Transaction transaction: transactionRespository.findAll()) {
+        List<Transaction> transactions = transactionRespository.findAll()
+                .stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .collect(Collectors.toList());
+
+        for(Transaction transaction: transactions) {
             if(transaction.getAmount() < 0d) {
                 if (result.containsKey(transaction.getCategory())) {
                     Double current = result.get(transaction.getCategory());
@@ -317,6 +342,8 @@ public class StatsManager {
                 }
             }
         }
+
+        if (categorizedRepository.count() != 0) categorizedRepository.deleteAll();
 
         for(Map.Entry<TransactionCategory, Double> categoryEntry: result.entrySet()) {
             categorizedRepository.save(new Categorized(categoryEntry.getKey(), categoryEntry.getValue()));

@@ -32,6 +32,8 @@ public class Transaction {
 
     private String categoryMatchKeyword;
 
+    private boolean usedForCalculation;
+
     public Transaction() {}
 
     public Transaction(String type, double amount, String sender, String receiver, String description) {
@@ -40,6 +42,7 @@ public class Transaction {
         this.sender = sender;
         this.receiver = receiver;
         this.description = description;
+        this.usedForCalculation = true;
     }
 
     public Date getDate() {
@@ -140,5 +143,13 @@ public class Transaction {
 
     public void setCategoryMatchKeyword(String categoryMatchKeyword) {
         this.categoryMatchKeyword = categoryMatchKeyword;
+    }
+
+    public boolean isUsedForCalculation() {
+        return usedForCalculation;
+    }
+
+    public void setUsedForCalculation(boolean usedForCalculation) {
+        this.usedForCalculation = usedForCalculation;
     }
 }
