@@ -36,13 +36,12 @@ public class Transaction {
 
     public Transaction() {}
 
-    public Transaction(String type, double amount, String sender, String receiver, String description) {
-        this.type = type;
-        this.amount = amount;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.description = description;
-        this.usedForCalculation = true;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Date getDate() {

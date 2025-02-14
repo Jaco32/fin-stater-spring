@@ -77,6 +77,7 @@ public class PkoBpTranzMgr extends TransactionManager {
                 categorizeRow(transactionRow);
                 subCategorizeRow(transactionRow);
                 setTransactionFrequency(transactionRow);
+                transactionRow.setUsedForCalculation(true);
                 transactionRespository.save(transactionRow);
                 transactionRows.add(transactionRow);
             }
@@ -143,6 +144,7 @@ public class PkoBpTranzMgr extends TransactionManager {
                 categorizeRow(transactionRow);
                 subCategorizeRow(transactionRow);
                 setTransactionFrequency(transactionRow);
+                transactionRow.setUsedForCalculation(true);
                 transactionRespository.save(transactionRow);
                 transactionRows.add(transactionRow);
             }

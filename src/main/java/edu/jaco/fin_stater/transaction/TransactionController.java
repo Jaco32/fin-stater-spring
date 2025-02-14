@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class TransactionController {
@@ -49,7 +50,14 @@ public class TransactionController {
 
     @CrossOrigin
     @PatchMapping("/transaction/{id}")
-    public void toogleTransactionForStats(@RequestHeader("mode") String mode, @PathVariable Integer id) {
-
+    public void toogleTransactionForStats(@RequestHeader("mode") String mode, @PathVariable Long id) {
+        Optional<Transaction> transaction = transactionRespository.findById(id);
+        transaction.ifPresent(tr -> {
+            tr.setUsedForCalculation(!tr.isUsedForCalculation());
+            transactionRespository.save(tr);
+        });
+        statsManager.calculateBalance();
+        statsManager.calculateBalanceMonthly();
+        statsManager.calculateCategorized();
     }
 }
