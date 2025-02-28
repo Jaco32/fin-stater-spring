@@ -50,6 +50,8 @@ public class UserController {
                 statement.execute("create sequence balance_monthly_seq start with 1 increment by 50");
                 statement.execute("create table categorized (expense float(53) not null, id bigint not null, category enum ('AUTO','BANKOMAT','DOM','DOMINO','DZIECI','HIGIENA','KARTA_KREDYTOWA','OPLATY','OTHER','PALIWO','ROWER','SPOZYWCZE','ZDROWIE'), primary key (id))");
                 statement.execute("create sequence categorized_seq start with 1 increment by 50");
+                statement.execute("create table balance_avarage (avarage_balance float(53) not null, avarage_expenses float(53) not null, avarage_income float(53) not null, id bigint not null, primary key (id))");
+                statement.execute("create sequence balance_avarage_seq start with 1 increment by 50");
             }
         });
     }

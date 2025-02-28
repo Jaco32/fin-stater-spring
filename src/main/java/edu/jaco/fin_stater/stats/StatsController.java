@@ -1,8 +1,10 @@
 package edu.jaco.fin_stater.stats;
 
 import edu.jaco.fin_stater.stats.entity.Balance;
+import edu.jaco.fin_stater.stats.entity.BalanceAvarage;
 import edu.jaco.fin_stater.stats.entity.BalanceMonthly;
 import edu.jaco.fin_stater.stats.entity.Categorized;
+import edu.jaco.fin_stater.stats.repo.BalanceAvarageRepository;
 import edu.jaco.fin_stater.stats.repo.BalanceMonthlyRepository;
 import edu.jaco.fin_stater.stats.repo.BalanceRepository;
 import edu.jaco.fin_stater.stats.repo.CategorizedRepository;
@@ -24,6 +26,9 @@ public class StatsController {
     @Autowired
     CategorizedRepository categorizedRepository;
 
+    @Autowired
+    BalanceAvarageRepository balanceAvarageRepository;
+
     @CrossOrigin
     @GetMapping
     public Balance getBalance(@RequestHeader("mode") String mode) {
@@ -40,5 +45,11 @@ public class StatsController {
     @GetMapping("categorized")
     public List<Categorized> getCategorized(@RequestHeader("mode") String mode) {
         return categorizedRepository.findAll();
+    }
+
+    @CrossOrigin
+    @GetMapping("avarage")
+    public BalanceAvarage getBalanceAvarage(@RequestHeader("mode") String mode) {
+        return balanceAvarageRepository.findAll().get(0);
     }
 }

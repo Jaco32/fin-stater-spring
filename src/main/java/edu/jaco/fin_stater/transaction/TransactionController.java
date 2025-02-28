@@ -46,6 +46,7 @@ public class TransactionController {
         statsManager.calculateBalance();
         statsManager.calculateBalanceMonthly();
         statsManager.calculateCategorized();
+        statsManager.calculateBalanceAvarage();
     }
 
     @CrossOrigin
@@ -59,5 +60,6 @@ public class TransactionController {
         statsManager.calculateBalance();
         statsManager.calculateBalanceMonthly();
         statsManager.calculateCategorized();
+        statsManager.calculateBalanceAvarage();
     }
 }

@@ -2,8 +2,10 @@ package edu.jaco.fin_stater.stats;
 
 import edu.jaco.fin_stater.pos.PosDto;
 import edu.jaco.fin_stater.stats.entity.Balance;
+import edu.jaco.fin_stater.stats.entity.BalanceAvarage;
 import edu.jaco.fin_stater.stats.entity.BalanceMonthly;
 import edu.jaco.fin_stater.stats.entity.Categorized;
+import edu.jaco.fin_stater.stats.repo.BalanceAvarageRepository;
 import edu.jaco.fin_stater.stats.repo.BalanceMonthlyRepository;
 import edu.jaco.fin_stater.stats.repo.BalanceRepository;
 import edu.jaco.fin_stater.stats.repo.CategorizedRepository;
@@ -31,6 +33,9 @@ public class StatsManager {
 
     @Autowired
     CategorizedRepository categorizedRepository;
+
+    @Autowired
+    BalanceAvarageRepository balanceAvarageRepository;
 
     public Stats stats;
 
@@ -288,5 +293,15 @@ public class StatsManager {
 
         if (categorizedRepository.count() != 0) categorizedRepository.deleteAll();
         categorizedRepository.saveAll(categorized);
+    }
+
+    public void calculateBalanceAvarage() {
+        Balance balance = balanceRepository.findAll().get(0);
+        long monthsCount = balanceMonthlyRepository.count();
+        double avgIncome = balance.getIncome()/monthsCount;
+        double avgExpense = balance.getExpenses()/monthsCount;
+        double avgBalance = balance.getPeriodBalance()/monthsCount;
+        if (balanceAvarageRepository.count() != 0) balanceAvarageRepository.deleteAll();
+        balanceAvarageRepository.save(new BalanceAvarage(avgIncome, avgExpense, avgBalance));
     }
 }
