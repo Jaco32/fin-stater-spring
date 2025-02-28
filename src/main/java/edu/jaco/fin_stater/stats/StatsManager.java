@@ -40,70 +40,6 @@ public class StatsManager {
 
     public StatsManager() {}
 
-    public LinkedList<Stats> calculateMonthlyStats(Set<Transaction> transactionRows)
-    {
-        LinkedList<Stats> perMonthStats = new LinkedList<>();
-
-        Map<Integer, ArrayList<Transaction>> transactionsPerMonth = new HashMap<>();
-        transactionsPerMonth.put(0, new ArrayList<Transaction>());
-        transactionsPerMonth.put(1, new ArrayList<Transaction>());
-        transactionsPerMonth.put(2, new ArrayList<Transaction>());
-        transactionsPerMonth.put(3, new ArrayList<Transaction>());
-        transactionsPerMonth.put(4, new ArrayList<Transaction>());
-        transactionsPerMonth.put(5, new ArrayList<Transaction>());
-        transactionsPerMonth.put(6, new ArrayList<Transaction>());
-        transactionsPerMonth.put(7, new ArrayList<Transaction>());
-        transactionsPerMonth.put(8, new ArrayList<Transaction>());
-        transactionsPerMonth.put(9, new ArrayList<Transaction>());
-        transactionsPerMonth.put(10, new ArrayList<Transaction>());
-        transactionsPerMonth.put(11, new ArrayList<Transaction>());
-
-        Calendar calendar = Calendar.getInstance();
-
-        for(Transaction trRow : transactionRows)
-        {
-            if(trRow.getType().equals("Spłata kredytu")) {
-                if(trRow.getAmount() > -3240) {
-                    calendar.setTime(trRow.getDate());
-                    transactionsPerMonth.get(calendar.get(Calendar.MONTH)).add(trRow);
-                }
-            }
-            else if(!trRow.getReceiver().contains("BUDLAND") && // GeoGrupa
-                    !trRow.getReceiver().contains("MICHAŁ KOŚCIŃSKI") && // Klima
-                    !trRow.getDescription().contains("010062941 74987502241466914879860") && // Booking.com -> Kaszuby
-                    !trRow.getDescription().contains("BPID:AV9DZAFZXP") && // Przyczepka Thule
-                    (!trRow.getDescription().contains("APART") && !trRow.getDescription().contains("2023-07-13")) && // Obrączki Apart
-                    !trRow.getDescription().contains("TASHI THAI&SUSHI") && // Chrzciny Tosi
-                    (!trRow.getSender().contains("ANNA MARIA PIECZKA") && (Double.compare(trRow.getAmount(), 10000) != 0)) && // Wkład Ani w Tourana
-                    !trRow.getReceiver().contains("GRUPA CICHY-ZASADA SP. Z.O.O. ") && // Touran 50%
-                    (!trRow.getDescription().contains("CICHY - ZASADA") && !trRow.getDescription().contains("2023-10-26")) && // Touran - hak
-                    ((!trRow.getSender().contains("JACEK LESZEK WĘGORKIEWICZ") && (Double.compare(trRow.getAmount(), 12000) != 0) && !trRow.getDescription().contains("WPŁATA")) || // Kasa Mili
-                            (trRow.getSender().contains("JACEK LESZEK WĘGORKIEWICZ") && (Double.compare(trRow.getAmount(), 10200) == 0) && trRow.getDescription().contains("WPŁATA"))) && // Kasa z chrzcin i ślubu
-                    (Double.compare(trRow.getAmount(), -99600) != 0) &&
-                    !trRow.getSender().contains("WĘGORKIEWICZ MACIEJ") &&
-                    !trRow.getDescription().contains("KIMONKO") &&
-                    (!trRow.getDescription().contains("centrumfotelikow.pl") && !trRow.getDescription().contains("00000075698411673")))
-            {
-                calendar.setTime(trRow.getDate());
-                transactionsPerMonth.get(calendar.get(Calendar.MONTH)).add(trRow);
-            }
-        }
-
-        for(int i = 0; i <= transactionsPerMonth.size()-1; i++) {
-            Stats monthlyStats = new Stats();
-            for(Transaction monthlyTransaction : transactionsPerMonth.get(i)) {
-                if (monthlyTransaction.getAmount() < 0)
-                    monthlyStats.setExpenses(monthlyStats.getExpenses() + monthlyTransaction.getAmount());
-                else
-                    monthlyStats.setIncome(monthlyStats.getIncome() + monthlyTransaction.getAmount());
-            }
-            monthlyStats.setSavings(monthlyStats.getIncome() - (-1*monthlyStats.getExpenses()));
-            perMonthStats.add(monthlyStats);
-        }
-
-        return perMonthStats;
-    }
-
     public CategoryStats calculateCategoryStats(TransactionCategory category, List<Transaction> transactions) {
         CategoryStats categoryStats = new CategoryStats();
 
@@ -343,10 +279,14 @@ public class StatsManager {
             }
         }
 
-        if (categorizedRepository.count() != 0) categorizedRepository.deleteAll();
-
+        List<Categorized> categorized = new ArrayList<>();
         for(Map.Entry<TransactionCategory, Double> categoryEntry: result.entrySet()) {
-            categorizedRepository.save(new Categorized(categoryEntry.getKey(), categoryEntry.getValue()));
+            categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue()));
         }
+        Comparator<Categorized> categoryComparator = Comparator.comparing(Categorized::getExpense);
+        categorized.sort(categoryComparator);
+
+        if (categorizedRepository.count() != 0) categorizedRepository.deleteAll();
+        categorizedRepository.saveAll(categorized);
     }
 }
