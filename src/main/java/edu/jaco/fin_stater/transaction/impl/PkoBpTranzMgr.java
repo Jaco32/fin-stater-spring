@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,36 +32,27 @@ public class PkoBpTranzMgr extends TransactionManager {
     private final short TRANSACTION_ADD_INFO_1_COLUMN_NUM = 13;
     private final short TRANSACTION_ADD_INFO_2_COLUMN_NUM = 14;
 
-    public List<Transaction> loadTransactions(String path) {
-        List<Transaction> transactionRows;
-
+    public void loadTransactions(String path) {
         try
         {
             Workbook workbook = new XSSFWorkbook(path);
-            transactionRows = parseTransactions(workbook);
+            parseTransactions(workbook);
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
-
-        return transactionRows;
     }
 
-    public List<Transaction> loadTransactionsFromAPI(byte[] fileContent) {
-        List<Transaction> transactionRows;
-
+    public void loadTransactionsFromAPI(byte[] fileContent) {
         try {
             InputStream fileIS = new ByteArrayInputStream(fileContent);
             Workbook workbook = new XSSFWorkbook(fileIS);
-            transactionRows = parseTransactions(workbook);
+            parseTransactions(workbook);
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
-
-        return transactionRows;
     }
 
-    private List<Transaction> parseTransactions(Workbook workbook) throws ParseException {
-        List<Transaction> transactionRows = new LinkedList<>();
+    private void parseTransactions(Workbook workbook) throws ParseException {
         Sheet sheet = workbook.getSheetAt(0);
         for (int i = sheet.getFirstRowNum() + 1; i <= sheet.getLastRowNum(); i++) {
             Transaction transactionRow = new Transaction();
@@ -69,9 +62,10 @@ public class PkoBpTranzMgr extends TransactionManager {
                     case TRANSACTION_DATE_COLUMN_NUM:
                         try {
                             String dateCellValue = row.getCell(j).getStringCellValue();
-                            transactionRow.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(dateCellValue));
+                            transactionRow.setDate(LocalDate.parse(dateCellValue));
                         } catch (IllegalStateException e) {
-                            transactionRow.setDate(DateUtil.getJavaDate(row.getCell(j).getNumericCellValue()));
+                            LocalDateTime ldt = DateUtil.getLocalDateTime(row.getCell(j).getNumericCellValue());
+                            transactionRow.setDate(ldt.toLocalDate());
                         }
                         break;
                     case TRANSACTION_TYPE_COLUMN_NUM:
@@ -81,7 +75,6 @@ public class PkoBpTranzMgr extends TransactionManager {
                         try {
                             transactionRow.setAmount(row.getCell(j).getNumericCellValue());
                         } catch (IllegalStateException ex) {
-                            System.out.println("i = " + i);
                             throw ex;
                         }
                         break;
@@ -112,9 +105,6 @@ public class PkoBpTranzMgr extends TransactionManager {
             setTransactionFrequency(transactionRow);
             transactionRow.setUsedForCalculation(true);
             transactionRespository.save(transactionRow);
-            transactionRows.add(transactionRow);
         }
-
-        return transactionRows;
     }
 }

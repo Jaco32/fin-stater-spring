@@ -2,7 +2,7 @@ package edu.jaco.fin_stater.transaction;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Transaction {
@@ -11,7 +11,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Date date;
+    private LocalDate date;
     private String type = "";
     private double amount;
     private double balance;
@@ -44,11 +44,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

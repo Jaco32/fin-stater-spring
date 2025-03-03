@@ -20,7 +20,7 @@ public abstract class TransactionManager {
     @Autowired
     protected TransactionRespository transactionRespository;
 
-    public abstract List<Transaction> loadTransactions(String path) throws IOException, CsvValidationException, ParseException;
+    public abstract void loadTransactions(String path) throws IOException, CsvValidationException, ParseException;
 
     public List<Transaction> excludeTransactionsByExcelRowNumber(List<Transaction> transactions, List<Integer> excelRowNumbers)
     {

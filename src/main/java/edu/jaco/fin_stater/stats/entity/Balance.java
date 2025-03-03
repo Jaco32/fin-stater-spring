@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Balance {
@@ -13,15 +13,15 @@ public class Balance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Date fromDate;
-    private Date toDate;
+    private LocalDate fromDate;
+    private LocalDate toDate;
     private double income;
     private double expenses;
     private double periodBalance;
 
     public Balance() {}
 
-    public Balance(Date from, Date to, double income, double expenses, double periodBalance) {
+    public Balance(LocalDate from, LocalDate to, double income, double expenses, double periodBalance) {
         this.fromDate = from;
         this.toDate = to;
         this.income = income;
@@ -29,11 +29,11 @@ public class Balance {
         this.periodBalance = periodBalance;
     }
 
-    public Date getFrom_date() {
+    public LocalDate getFrom_date() {
         return fromDate;
     }
 
-    public Date getTo() {
+    public LocalDate getTo() {
         return toDate;
     }
 

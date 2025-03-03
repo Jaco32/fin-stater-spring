@@ -3,6 +3,7 @@ package edu.jaco.fin_stater.transaction;
 import edu.jaco.fin_stater.stats.StatsManager;
 import edu.jaco.fin_stater.transaction.impl.PkoBpTranzMgr;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +24,7 @@ public class TransactionController {
     @CrossOrigin
     @GetMapping("/transaction")
     public List<Transaction> getTransaction(@RequestHeader("mode") String mode) {
-        System.out.println("Received mode header with value: " + mode);
-        return transactionRespository.findAll();
+        return transactionRespository.findAll(Sort.by("date").descending());
     }
 
     @CrossOrigin
