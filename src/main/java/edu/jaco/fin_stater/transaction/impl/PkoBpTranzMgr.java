@@ -1,6 +1,7 @@
 package edu.jaco.fin_stater.transaction.impl;
 
 import edu.jaco.fin_stater.transaction.Transaction;
+import edu.jaco.fin_stater.transaction.TransactionSpecification;
 import edu.jaco.fin_stater.transaction.intf.TransactionManager;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,10 +14,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -104,7 +103,11 @@ public class PkoBpTranzMgr extends TransactionManager {
             subCategorizeRow(transactionRow);
             setTransactionFrequency(transactionRow);
             transactionRow.setUsedForCalculation(true);
-            transactionRespository.save(transactionRow);
+
+            TransactionSpecification transactionSpecification = new TransactionSpecification(transactionRow);
+            List<Transaction> matchingTransactions = transactionRespository.findAll(transactionSpecification);
+            if(matchingTransactions.size() == 1) transactionRespository.delete(matchingTransactions.get(0));
+            else transactionRespository.save(transactionRow);
         }
     }
 }
