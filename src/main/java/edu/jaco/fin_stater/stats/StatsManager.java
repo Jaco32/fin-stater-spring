@@ -16,6 +16,8 @@ import edu.jaco.fin_stater.transaction.TransactionSubcategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -106,7 +108,7 @@ public class StatsManager {
         List<PosDto> posList = new ArrayList<>();
 
         for (Transaction transaction : transactions) {
-            if ((transaction.getCategory() == category) && (transaction.getDate().getMonth() == month)) {
+            if ((transaction.getCategory() == category) /*&& (transaction.getDate().getMonth() == month)*/) {
                 if (posList.size() > 0) {
                     boolean wasFound = false;
                     for (int i = 0; i < posList.size(); i++) {
@@ -212,8 +214,7 @@ public class StatsManager {
     }
 
     public void calculateBalanceMonthly() {
-        Map<Integer, Map<String, Double>> result = new HashMap<>();
-        Calendar calendar = Calendar.getInstance();
+        Map<YearMonth, Map<String, Double>> result = new TreeMap<>();
 
         List<Transaction> transactions = transactionRespository.findAll()
                 .stream()
@@ -222,45 +223,36 @@ public class StatsManager {
 
         for(Transaction transaction: transactions)
         {
-            calendar.setTime(transaction.getDate());
-            for(int month = Calendar.JANUARY; month <= Calendar.DECEMBER; month++) {
-                if (calendar.get(Calendar.MONTH) == month) {
-                    if (result.containsKey(month)) {
-                        Map<String, Double> current = result.get(month);
-                        if (transaction.getAmount() > 0) {
-                            current.replace("income", current.get("income") + transaction.getAmount());
-                        } else {
-                            current.replace("expense", current.get("expense") + transaction.getAmount());
-                        }
-                        result.replace(month, current);
-                    } else {
-                        Map<String, Double> init = new HashMap<>();
-                        if (transaction.getAmount() > 0d) {
-                            init.put("income", transaction.getAmount());
-                            init.put("expense", 0d);
-                        } else {
-                            init.put("income", 0d);
-                            init.put("expense", transaction.getAmount());
-                        }
-                        result.put(month, init);
-                    }
+            YearMonth mapKey = YearMonth.of(transaction.getDate().getYear(), transaction.getDate().getMonth());
+            if (result.containsKey(mapKey)) {
+                Map<String, Double> current = result.get(mapKey);
+                if (transaction.getAmount() > 0) {
+                    current.replace("income", current.get("income") + transaction.getAmount());
+                } else {
+                    current.replace("expense", current.get("expense") + transaction.getAmount());
                 }
+                result.replace(mapKey, current);
+            } else {
+                Map<String, Double> init = new HashMap<>();
+                if (transaction.getAmount() > 0d) {
+                    init.put("income", transaction.getAmount());
+                    init.put("expense", 0d);
+                } else {
+                    init.put("income", 0d);
+                    init.put("expense", transaction.getAmount());
+                }
+                result.put(mapKey, init);
             }
         }
 
         if (balanceMonthlyRepository.count() != 0) balanceMonthlyRepository.deleteAll();
 
-        for(Map.Entry<Integer, Map<String, Double>> monthEntry: result.entrySet()) {
+        for(Map.Entry<YearMonth, Map<String, Double>> monthEntry: result.entrySet()) {
             Double income = monthEntry.getValue().get("income");
             Double expenses = monthEntry.getValue().get("expense");
             Double balance = income - (-1*expenses);
-
-            calendar.set(Calendar.MONTH, monthEntry.getKey());
-            String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.UK);
-
             double rateOfReturn = (balance / income) * 100;
-
-            balanceMonthlyRepository.save(new BalanceMonthly(month, income, expenses, balance, rateOfReturn));
+            balanceMonthlyRepository.save(new BalanceMonthly(monthEntry.getKey().toString(), income, expenses, balance, rateOfReturn));
         }
     }
 
