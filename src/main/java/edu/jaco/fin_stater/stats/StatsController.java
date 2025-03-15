@@ -1,13 +1,7 @@
 package edu.jaco.fin_stater.stats;
 
-import edu.jaco.fin_stater.stats.entity.Balance;
-import edu.jaco.fin_stater.stats.entity.BalanceAvarage;
-import edu.jaco.fin_stater.stats.entity.BalanceMonthly;
-import edu.jaco.fin_stater.stats.entity.Categorized;
-import edu.jaco.fin_stater.stats.repo.BalanceAvarageRepository;
-import edu.jaco.fin_stater.stats.repo.BalanceMonthlyRepository;
-import edu.jaco.fin_stater.stats.repo.BalanceRepository;
-import edu.jaco.fin_stater.stats.repo.CategorizedRepository;
+import edu.jaco.fin_stater.stats.entity.*;
+import edu.jaco.fin_stater.stats.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +22,9 @@ public class StatsController {
 
     @Autowired
     BalanceAvarageRepository balanceAvarageRepository;
+
+    @Autowired
+    CategorizedMonthlyRepository categorizedMonthlyRepository;
 
     @CrossOrigin
     @GetMapping
@@ -51,5 +48,11 @@ public class StatsController {
     @GetMapping("avarage")
     public BalanceAvarage getBalanceAvarage(@RequestHeader("mode") String mode) {
         return balanceAvarageRepository.findAll().get(0);
+    }
+
+    @CrossOrigin
+    @GetMapping("categorizedmonthly")
+    public List<CategorizedMonthly> getCategorizedMonthly(@RequestHeader("mode") String mode) {
+        return categorizedMonthlyRepository.findAll();
     }
 }

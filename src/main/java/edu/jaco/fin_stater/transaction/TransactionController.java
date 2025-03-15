@@ -2,6 +2,7 @@ package edu.jaco.fin_stater.transaction;
 
 import com.opencsv.exceptions.CsvValidationException;
 import edu.jaco.fin_stater.stats.StatsManager;
+import edu.jaco.fin_stater.stats.entity.CategorizedMonthly;
 import edu.jaco.fin_stater.transaction.impl.PkoBpTranzMgr;
 import edu.jaco.fin_stater.transaction.impl.SantanderTranzMgr;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class TransactionController {
@@ -55,7 +59,8 @@ public class TransactionController {
         else pkoBpTranzMgr.loadTransactionsFromAPI(fileContent);
 
         statsManager.calculateBalance();
-        statsManager.calculateBalanceMonthly();
+        Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
+        statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
         statsManager.calculateBalanceAvarage();
     }
@@ -69,7 +74,8 @@ public class TransactionController {
             transactionRespository.save(tr);
         });
         statsManager.calculateBalance();
-        statsManager.calculateBalanceMonthly();
+        Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
+        statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
         statsManager.calculateBalanceAvarage();
     }

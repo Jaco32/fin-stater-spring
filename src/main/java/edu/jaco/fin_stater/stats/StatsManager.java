@@ -1,10 +1,7 @@
 package edu.jaco.fin_stater.stats;
 
 import edu.jaco.fin_stater.pos.PosDto;
-import edu.jaco.fin_stater.stats.entity.Balance;
-import edu.jaco.fin_stater.stats.entity.BalanceAvarage;
-import edu.jaco.fin_stater.stats.entity.BalanceMonthly;
-import edu.jaco.fin_stater.stats.entity.Categorized;
+import edu.jaco.fin_stater.stats.entity.*;
 import edu.jaco.fin_stater.stats.repo.BalanceAvarageRepository;
 import edu.jaco.fin_stater.stats.repo.BalanceMonthlyRepository;
 import edu.jaco.fin_stater.stats.repo.BalanceRepository;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,18 +35,10 @@ public class StatsManager {
     @Autowired
     BalanceAvarageRepository balanceAvarageRepository;
 
-    public Stats stats;
-
-    public StatsManager(Stats stats) {
-        this.stats = stats;
-    }
-
     public StatsManager() {}
 
     public CategoryStats calculateCategoryStats(TransactionCategory category, List<Transaction> transactions) {
         CategoryStats categoryStats = new CategoryStats();
-
-        categoryStats.category = category;
 
         categoryStats.count = transactions.stream()
                 .filter(trRow -> trRow.getCategory() == category)
@@ -88,20 +76,6 @@ public class StatsManager {
         }
 
         System.out.println(subcategory.name() + ", sum = " + sum);
-    }
-
-    public void printTransactionsView(List<Transaction> transactions, TransactionPrintStyle printStyle)
-    {
-        int counter = 0;
-        for(Transaction transaction: transactions) {
-            if(printStyle == TransactionPrintStyle.ONE_LINER) {
-                System.out.println("description: " + transaction.getDescription() + ", date: " + transaction.getDate() + ", amount: " + transaction.getAmount() + ", sender: " + transaction.getSender() + ", receiver: " + transaction.getReceiver());
-            } else {
-                System.out.println(transaction);
-            }
-            counter++;
-        }
-        System.out.println("Printed " + counter + " transactions");
     }
 
     public void printPosView(List<Transaction> transactions, TransactionCategory category, int month) {
@@ -213,7 +187,7 @@ public class StatsManager {
                 maxTransactionDate.get().getDate(), income, expenses, balance));
     }
 
-    public void calculateBalanceMonthly() {
+    public void calculateBalanceMonthly(Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly) {
         Map<YearMonth, Map<String, Double>> result = new TreeMap<>();
 
         List<Transaction> transactions = transactionRespository.findAll()
@@ -252,7 +226,17 @@ public class StatsManager {
             Double expenses = monthEntry.getValue().get("expense");
             Double balance = income - (-1*expenses);
             double rateOfReturn = (balance / income) * 100;
-            balanceMonthlyRepository.save(new BalanceMonthly(monthEntry.getKey().toString(), income, expenses, balance, rateOfReturn));
+            ArrayList<CategorizedMonthly> categorizedMonth = new ArrayList<>(calegorizedMonthly.get(monthEntry.getKey()));
+            Comparator<CategorizedMonthly> categoryComparator = Comparator.comparing(CategorizedMonthly::getExpense);
+            categorizedMonth.sort(categoryComparator);
+            BalanceMonthly balanceMonthly = new BalanceMonthly(
+                    monthEntry.getKey().toString(),
+                    income,
+                    expenses,
+                    balance,
+                    rateOfReturn,
+                    categorizedMonth);
+            balanceMonthlyRepository.save(balanceMonthly);
         }
     }
 
@@ -295,5 +279,53 @@ public class StatsManager {
         double avgBalance = balance.getPeriodBalance()/monthsCount;
         if (balanceAvarageRepository.count() != 0) balanceAvarageRepository.deleteAll();
         balanceAvarageRepository.save(new BalanceAvarage(avgIncome, avgExpense, avgBalance));
+    }
+
+    public Map<YearMonth, Set<CategorizedMonthly>> calculateCategorizedMonthly() {
+        Map<YearMonth, Set<CategorizedMonthly>> result = new TreeMap<>();
+
+        List<Transaction> transactions = transactionRespository.findAll()
+                .stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .collect(Collectors.toList());
+
+        for(Transaction transaction: transactions)
+        {
+            YearMonth mapKey = YearMonth.of(transaction.getDate().getYear(), transaction.getDate().getMonth());
+            if (result.containsKey(mapKey)) {
+                Set<CategorizedMonthly> current = result.get(mapKey);
+                if (current.stream().filter(it -> it.getCategory() == transaction.getCategory()).count() > 0) {
+                    Iterator<CategorizedMonthly> itr = current.iterator();
+                    CategorizedMonthly tmp;
+                    while(itr.hasNext()) {
+                        tmp = itr.next();
+                        if ((tmp.getCategory() == transaction.getCategory()) && (transaction.getAmount() < 0d)) {
+                            double newExpense = tmp.getExpense() + transaction.getAmount();
+                            tmp.setExpense(newExpense);
+                            break;
+                        }
+                    }
+                } else {
+                    if (transaction.getAmount() < 0d) {
+                        CategorizedMonthly newCategory = new CategorizedMonthly(transaction.getCategory(), transaction.getAmount());
+                        current.add(newCategory);
+                    }
+                }
+            } else {
+                if (transaction.getAmount() < 0d) {
+                    CategorizedMonthly newCategory = new CategorizedMonthly(transaction.getCategory(), transaction.getAmount());
+                    Set<CategorizedMonthly> newList = new HashSet<>();
+                    newList.add(newCategory);
+                    result.put(mapKey, newList);
+                }
+            }
+        }
+
+        for(YearMonth ym: result.keySet()) {
+            Set<CategorizedMonthly> cm = result.get(ym);
+            cm.forEach(it -> System.out.println("Kategoria: " + it.getCategory() + ", " + it.getExpense()));
+        }
+
+        return result;
     }
 }

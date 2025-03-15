@@ -46,7 +46,6 @@ public class SantanderTranzMgr extends TransactionManager {
 
         String[] rowValues;
         while((rowValues = csvReader.readNext()) != null) {
-            System.out.println("CSV vals: " + rowValues[0] + ", " + rowValues[2] + ", " + rowValues[5]);
             Transaction transaction = new Transaction();
             transaction.setDate(LocalDate.parse(rowValues[0], DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             transaction.setDescription(rowValues[2]);

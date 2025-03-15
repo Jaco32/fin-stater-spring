@@ -1,7 +1,6 @@
 package edu.jaco.fin_stater.user;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
