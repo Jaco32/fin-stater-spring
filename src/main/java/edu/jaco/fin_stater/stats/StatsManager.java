@@ -181,10 +181,31 @@ public class StatsManager {
 
         double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
 
-        if (balanceRepository.count() != 0) balanceRepository.deleteAll();
+        balanceRepository.save(new Balance(minTransactionDate.get().getDate(),
+                maxTransactionDate.get().getDate(), income, expenses, balance, "Default"));
+    }
+
+    public void calculateBalance(List<Transaction> transactions, String viewName) {
+        Comparator<Transaction> transactionDateComparator = Comparator.comparing(Transaction::getDate);
+        Optional<Transaction> minTransactionDate = transactions.stream().min(transactionDateComparator);
+        Optional<Transaction> maxTransactionDate = transactions.stream().max(transactionDateComparator);
+
+        double income = transactions.stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .mapToDouble(tr -> tr.getAmount())
+                .filter(am -> am > 0.0)
+                .sum();
+
+        double expenses = transactions.stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .mapToDouble(tr -> tr.getAmount())
+                .filter(am -> am < 0.0)
+                .sum();
+
+        double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
 
         balanceRepository.save(new Balance(minTransactionDate.get().getDate(),
-                maxTransactionDate.get().getDate(), income, expenses, balance));
+                maxTransactionDate.get().getDate(), income, expenses, balance, viewName));
     }
 
     public void calculateBalanceMonthly(Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly) {

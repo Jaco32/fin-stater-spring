@@ -18,15 +18,17 @@ public class Balance {
     private double income;
     private double expenses;
     private double periodBalance;
+    private String viewName;
 
     public Balance() {}
 
-    public Balance(LocalDate from, LocalDate to, double income, double expenses, double periodBalance) {
+    public Balance(LocalDate from, LocalDate to, double income, double expenses, double periodBalance, String viewName) {
         this.fromDate = from;
         this.toDate = to;
         this.income = income;
         this.expenses = expenses;
         this.periodBalance = periodBalance;
+        this.viewName = viewName;
     }
 
     public LocalDate getFrom_date() {
@@ -47,5 +49,9 @@ public class Balance {
 
     public double getPeriodBalance() {
         return periodBalance;
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }
