@@ -6,7 +6,6 @@ import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,9 +16,6 @@ public class UserManager {
 
     @Autowired
     private EntityManager entityManager;
-
-    @Autowired
-    private DataSource dataSource;
 
     private Statement statement;
     private Connection connection;
@@ -42,22 +38,5 @@ public class UserManager {
                 System.out.println("seq created");
             }
         });
-    }
-
-    public void checkUserTransactionTableSize() throws SQLException {
-        connection = dataSource.getConnection();
-        statement = connection.createStatement();
-        ResultSet size = statement.executeQuery("select count(*) from fin_stater_example_user_schema.transaction");
-        while(size.next()) {
-            System.out.println(size.getString(1));
-        }
-        ResultSet tables = statement.executeQuery("show tables from public");
-        while(tables.next()) {
-            System.out.println(tables.getString(1));
-        }
-        ResultSet currentSchema = statement.executeQuery("call current_schema");
-        while(currentSchema.next()) {
-            System.out.println(currentSchema.getString(1));
-        }
     }
 }
