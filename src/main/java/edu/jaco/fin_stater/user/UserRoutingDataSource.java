@@ -1,10 +1,12 @@
 package edu.jaco.fin_stater.user;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 public class UserRoutingDataSource extends AbstractRoutingDataSource {
 
-    private String lookupKey = "ANIELKA1";
+    @Value("{DB_DEFAULT_SCHEMA}")
+    private String lookupKey;
 
     @Override
     protected Object determineCurrentLookupKey() {

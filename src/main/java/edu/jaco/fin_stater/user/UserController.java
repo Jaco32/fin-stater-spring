@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.web.bind.annotation.*;
 
@@ -144,17 +145,21 @@ public class UserController {
             "'ONLINE'), " +
         "primary key (id))";
 
+    @Value("{DB_URL}")
+    private String dbUrl;
+
     @CrossOrigin
-    @PostMapping("create/{name}")
-    public void createUser(@RequestHeader("mode") String mode, @PathVariable String name) {
+    @PostMapping("create/{name}/{password}")
+    public void createUser(@RequestHeader("mode") String mode, @PathVariable String name, @PathVariable String password) {
         Session session = entityManager.unwrap(Session.class);
         session.doWork(new Work() {
             @Override
-            public void execute(Connection hibernateConnection) throws SQLException {
-                Connection connection = hibernateConnection;
+            public void execute(Connection connection) throws SQLException {
                 Statement statement = connection.createStatement();
+                boolean x = statement.execute("create user " + name + " password '" + password + "'");
+                System.out.println(x);
                 String schemaName = "fin_stater_" + name + "_schema";
-                statement.execute("create schema " + schemaName);
+                statement.execute("create schema " + schemaName + " authorization " + name);
                 statement.execute("set schema " + schemaName);
                 ResultSet currentSchema = statement.executeQuery("call current_schema");
                 while(currentSchema.next()) {
@@ -181,7 +186,9 @@ public class UserController {
         });
 
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.url("jdbc:h2:~/finstat;SCHEMA=FIN_STATER_" + name.toUpperCase() + "_SCHEMA");
+        dataSourceBuilder.url(dbUrl + ";SCHEMA=FIN_STATER_" + name + "_SCHEMA");
+        dataSourceBuilder.username(name);
+        dataSourceBuilder.password(password);
         DataSource newDs = dataSourceBuilder.build();
 
         Map<Object, DataSource> currentDataSources = userRoutingDataSource.getResolvedDataSources();
