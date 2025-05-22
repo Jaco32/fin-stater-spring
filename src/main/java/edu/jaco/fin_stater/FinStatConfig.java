@@ -19,10 +19,10 @@ public class FinStatConfig {
     @Value("${DB_ADMIN}")
     private String user;
 
-    @Value("{DB_ADMIN_PASSWORD}")
+    @Value("${DB_ADMIN_PASSWORD}")
     private String password;
 
-    @Value("{DB_DEFAULT_SCHEMA}")
+    @Value("${DB_DEFAULT_SCHEMA}")
     private String defaultSchema;
 
     @Bean

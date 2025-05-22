@@ -145,7 +145,7 @@ public class UserController {
             "'ONLINE'), " +
         "primary key (id))";
 
-    @Value("{DB_URL}")
+    @Value("${DB_URL}")
     private String dbUrl;
 
     @CrossOrigin

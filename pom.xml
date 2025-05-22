@@ -84,6 +84,38 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>2.13.0</version>
+				<configuration>
+					<auth>
+						<type>oauth2</type>
+					</auth>
+					<schemaVersion>v2</schemaVersion>
+					<subscriptionId>76a2a392-3904-424e-9fcb-593425bc6ff8</subscriptionId>
+					<resourceGroup>RG-FinStat</resourceGroup>
+					<appName>finstat</appName>
+					<pricingTier>B1</pricingTier>
+					<region>polandcentral</region>
+					<runtime>
+						<os>Linux</os>
+						<javaVersion>Java 17</javaVersion>
+						<webContainer>Java SE</webContainer>
+					</runtime>
+					<deployment>
+						<resources>
+							<resource>
+								<directory>${project.basedir}/target</directory>
+								<includes>
+									<include>*.jar</include>
+								</includes>
+							</resource>
+						</resources>
+					</deployment>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

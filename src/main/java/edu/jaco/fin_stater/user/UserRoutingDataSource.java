@@ -5,7 +5,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 public class UserRoutingDataSource extends AbstractRoutingDataSource {
 
-    @Value("{DB_DEFAULT_SCHEMA}")
+    @Value("${DB_DEFAULT_SCHEMA}")
     private String lookupKey;
 
     @Override
