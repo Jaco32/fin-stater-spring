@@ -15,7 +15,12 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/user/create/*/*").permitAll());
+                .cors(cors -> cors.configure(httpSecurity))
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/user/create/*/*").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/transaction/upload/").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/transaction").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/stat").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/stat/*").permitAll());
         return httpSecurity.build();
     }
 
