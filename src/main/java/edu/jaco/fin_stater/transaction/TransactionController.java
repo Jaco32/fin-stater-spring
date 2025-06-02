@@ -5,6 +5,8 @@ import edu.jaco.fin_stater.stats.StatsManager;
 import edu.jaco.fin_stater.stats.entity.CategorizedMonthly;
 import edu.jaco.fin_stater.transaction.impl.PkoBpTranzMgr;
 import edu.jaco.fin_stater.transaction.impl.SantanderTranzMgr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ import java.util.Set;
 
 @RestController
 public class TransactionController {
+
+    Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
     @Autowired
     private TransactionRespository transactionRespository;
@@ -34,6 +38,7 @@ public class TransactionController {
     @CrossOrigin
     @GetMapping("/transaction")
     public List<Transaction> getTransaction(@RequestHeader("mode") String mode) {
+        logger.info("getTransaction - entered");
         return transactionRespository.findAll(Sort.by("date").descending());
     }
 
@@ -55,6 +60,7 @@ public class TransactionController {
                                    @RequestHeader("Content-Type") String contentType,
                                    @RequestBody byte[] fileContent) throws CsvValidationException, IOException
     {
+        logger.info("uploadTransactions - entered");
         if(contentType.equals("text/csv")) santanderTranzMgr.loadTransactionsFromAPI(fileContent);
         else pkoBpTranzMgr.loadTransactionsFromAPI(fileContent);
 
@@ -63,6 +69,8 @@ public class TransactionController {
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
         statsManager.calculateBalanceAvarage();
+
+        logger.info("uploadTransactions - exiting");
     }
 
     @CrossOrigin

@@ -4,6 +4,8 @@ import edu.jaco.fin_stater.transaction.TransactionRespository;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -21,6 +23,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("user")
 public class UserController {
+
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private EntityManager entityManager;
@@ -151,6 +155,8 @@ public class UserController {
     @CrossOrigin
     @PostMapping("create/{name}/{password}")
     public void createUser(@RequestHeader("mode") String mode, @PathVariable String name, @PathVariable String password) {
+        logger.info("createUser - entered");
+
         Session session = entityManager.unwrap(Session.class);
         session.doWork(new Work() {
             @Override
@@ -196,6 +202,8 @@ public class UserController {
         dsCopy.put(name.toUpperCase(), newDs);
         userRoutingDataSource.setTargetDataSources(dsCopy);
         userRoutingDataSource.setLookupKey(name.toUpperCase());
+
+        logger.info("createUser - exiting");
     }
 
     @CrossOrigin
