@@ -162,8 +162,7 @@ public class UserController {
             @Override
             public void execute(Connection connection) throws SQLException {
                 Statement statement = connection.createStatement();
-                boolean x = statement.execute("create user " + name + " password '" + password + "'");
-                System.out.println(x);
+                statement.execute("create user " + name + " password '" + password + "'");
                 String schemaName = "fin_stater_" + name + "_schema";
                 statement.execute("create schema " + schemaName + " authorization " + name);
                 statement.execute("set schema " + schemaName);
@@ -207,8 +206,10 @@ public class UserController {
     }
 
     @CrossOrigin
-    @PostMapping("switch/{name}")
-    public void switchUser(@RequestHeader("mode") String mode, @PathVariable String name) {
-        userRoutingDataSource.setLookupKey(name);
+    @PostMapping("login/{name}/{password}")
+    public void loginUser(@RequestHeader("mode") String mode, @PathVariable String name, @PathVariable String password) {
+        logger.info("loginUser - entered");
+        userRoutingDataSource.setLookupKey(name.toUpperCase());
+        logger.info("loginUser - entered");
     }
 }
