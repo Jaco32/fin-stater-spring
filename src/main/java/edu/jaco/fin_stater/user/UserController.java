@@ -72,13 +72,17 @@ public class UserController {
         "subcategory enum ('OTHER','SPOZYWCZE_ZAMAWIANE'), " +
         "primary key (id))";
 
-    private final String balanceTableSql = "create table balance (" +
+    private final String viewTableSql = "create table view (" +
+            "avarage_balance float(53)," +
+            "avarage_expenses float(53)," +
+            "avarage_income float(53)," +
             "expenses float(53) not null," +
             "from_date date," +
             "income float(53) not null," +
             "period_balance float(53) not null," +
             "to_date date," +
             "id bigint not null," +
+            "dtype varchar(31) not null," +
             "view_name varchar(255)," +
             "primary key (id))";
 
@@ -114,13 +118,6 @@ public class UserController {
                 "'KONTO_WSPOLNE'," +
                 "'PORCELANA'," +
                 "'ONLINE'), " +
-            "primary key (id))";
-
-    private final String balanceAvarageTableSql = "create table balance_avarage (" +
-            "avarage_balance float(53) not null," +
-            "avarage_expenses float(53) not null," +
-            "avarage_income float(53) not null," +
-            "id bigint not null," +
             "primary key (id))";
 
     private final String categorizedMonthlyTableSql = "create table categorized_monthly (" +
@@ -173,17 +170,14 @@ public class UserController {
                 statement.execute(transactionTableSql);
                 statement.execute("create sequence transaction_seq start with 1 increment by 50");
 
-                statement.execute(balanceTableSql);
-                statement.execute("create sequence balance_seq start with 1 increment by 50");
+                statement.execute(viewTableSql);
+                statement.execute("create sequence view_seq start with 1 increment by 50");
 
                 statement.execute(balanceMonthlyTableSql);
                 statement.execute("create sequence balance_monthly_seq start with 1 increment by 50");
 
                 statement.execute(categorizedTableSql);
                 statement.execute("create sequence categorized_seq start with 1 increment by 50");
-
-                statement.execute(balanceAvarageTableSql);
-                statement.execute("create sequence balance_avarage_seq start with 1 increment by 50");
 
                 statement.execute(categorizedMonthlyTableSql);
                 statement.execute("create sequence categorized_monthly_seq start with 1 increment by 50");

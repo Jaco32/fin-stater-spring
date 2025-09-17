@@ -19,7 +19,7 @@ public class StatsController {
     Logger logger = LoggerFactory.getLogger(StatsController.class);
 
     @Autowired
-    BalanceRepository balanceRepository;
+    ViewRepository viewRepository;
 
     @Autowired
     BalanceMonthlyRepository balanceMonthlyRepository;
@@ -28,7 +28,7 @@ public class StatsController {
     CategorizedRepository categorizedRepository;
 
     @Autowired
-    BalanceAvarageRepository balanceAvarageRepository;
+    ViewAvarageRepository balanceAvarageRepository;
 
     @Autowired
     CategorizedMonthlyRepository categorizedMonthlyRepository;
@@ -41,9 +41,9 @@ public class StatsController {
 
     @CrossOrigin
     @GetMapping
-    public List<Balance> getBalance(@RequestHeader("mode") String mode) {
+    public List<View> getBalance(@RequestHeader("mode") String mode) {
         logger.info("getBalance - entered");
-        return balanceRepository.findAll();
+        return viewRepository.findAll();
     }
 
     @CrossOrigin
@@ -62,9 +62,9 @@ public class StatsController {
 
     @CrossOrigin
     @GetMapping("avarage")
-    public BalanceAvarage getBalanceAvarage(@RequestHeader("mode") String mode) {
+    public List<ViewAvarage> getBalanceAvarage(@RequestHeader("mode") String mode) {
         logger.info("getBalanceAvarage - entered");
-        return balanceAvarageRepository.findAll().get(0);
+        return balanceAvarageRepository.findAll();
     }
 
     @CrossOrigin
@@ -84,5 +84,6 @@ public class StatsController {
 
         List<Transaction> transactions = transactionRespository.findAllById(idxs);
         statsManager.calculateBalance(transactions, name);
+        statsManager.calculateBalanceAvarage(name);
     }
 }

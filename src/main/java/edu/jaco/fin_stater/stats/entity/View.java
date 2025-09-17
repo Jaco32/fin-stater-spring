@@ -8,21 +8,22 @@ import jakarta.persistence.Id;
 import java.time.LocalDate;
 
 @Entity
-public class Balance {
+public class View {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private LocalDate fromDate;
     private LocalDate toDate;
     private double income;
     private double expenses;
     private double periodBalance;
-    private String viewName;
+    protected String viewName;
 
-    public Balance() {}
+    public View() {}
 
-    public Balance(LocalDate from, LocalDate to, double income, double expenses, double periodBalance, String viewName) {
+    public View(LocalDate from, LocalDate to, double income, double expenses, double periodBalance, String viewName) {
         this.fromDate = from;
         this.toDate = to;
         this.income = income;
@@ -53,5 +54,18 @@ public class Balance {
 
     public String getViewName() {
         return viewName;
+    }
+
+    @Override
+    public String toString() {
+        return "View{" +
+                "id=" + id +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                ", income=" + income +
+                ", expenses=" + expenses +
+                ", periodBalance=" + periodBalance +
+                ", viewName='" + viewName + '\'' +
+                '}';
     }
 }

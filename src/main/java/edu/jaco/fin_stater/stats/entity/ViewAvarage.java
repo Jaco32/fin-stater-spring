@@ -6,11 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class BalanceAvarage {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class ViewAvarage extends View {
 
     private double avarageIncome;
 
@@ -18,12 +14,13 @@ public class BalanceAvarage {
 
     private double avarageBalance;
 
-    public BalanceAvarage() {}
+    public ViewAvarage() {}
 
-    public BalanceAvarage(double income, double expenses, double balance) {
+    public ViewAvarage(double income, double expenses, double balance, String viewName) {
         this.avarageIncome = income;
         this.avarageExpenses = expenses;
         this.avarageBalance = balance;
+        this.viewName = viewName;
     }
 
     public double getAvarageIncome() {
