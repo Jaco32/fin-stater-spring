@@ -13,6 +13,7 @@ import edu.jaco.fin_stater.transaction.TransactionSubcategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Period;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -294,7 +295,9 @@ public class StatsManager {
 
     public void calculateBalanceAvarage(String viewName) {
         View view = viewRepository.findByViewName(viewName);
-        long monthsCount = balanceMonthlyRepository.count();
+        Period period = Period.between(view.getFrom_date(), view.getTo());
+        long monthsCount = period.getMonths();
+        if (period.getDays() > 0) monthsCount++;
         double avgIncome = view.getIncome()/monthsCount;
         double avgExpense = view.getExpenses()/monthsCount;
         double avgBalance = view.getPeriodBalance()/monthsCount;
