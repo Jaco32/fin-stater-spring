@@ -2,9 +2,9 @@ package edu.jaco.fin_stater.stats;
 
 import edu.jaco.fin_stater.pos.PosDto;
 import edu.jaco.fin_stater.stats.entity.*;
-import edu.jaco.fin_stater.stats.repo.BalanceAvarageRepository;
+import edu.jaco.fin_stater.stats.repo.ViewAvarageRepository;
 import edu.jaco.fin_stater.stats.repo.BalanceMonthlyRepository;
-import edu.jaco.fin_stater.stats.repo.BalanceRepository;
+import edu.jaco.fin_stater.stats.repo.ViewRepository;
 import edu.jaco.fin_stater.stats.repo.CategorizedRepository;
 import edu.jaco.fin_stater.transaction.Transaction;
 import edu.jaco.fin_stater.transaction.TransactionCategory;
@@ -13,6 +13,7 @@ import edu.jaco.fin_stater.transaction.TransactionSubcategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Period;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class StatsManager {
 
     @Autowired
-    private BalanceRepository balanceRepository;
+    private ViewRepository viewRepository;
 
     @Autowired
     private TransactionRespository transactionRespository;
@@ -33,7 +34,7 @@ public class StatsManager {
     CategorizedRepository categorizedRepository;
 
     @Autowired
-    BalanceAvarageRepository balanceAvarageRepository;
+    ViewAvarageRepository balanceAvarageRepository;
 
     public StatsManager() {}
 
@@ -181,8 +182,8 @@ public class StatsManager {
 
         double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
 
-        balanceRepository.save(new Balance(minTransactionDate.get().getDate(),
-                maxTransactionDate.get().getDate(), income, expenses, balance, "Default"));
+        viewRepository.save(new View(minTransactionDate.get().getDate(),
+                maxTransactionDate.get().getDate(), income, expenses, balance, "Full date range"));
     }
 
     public void calculateBalance(List<Transaction> transactions, String viewName) {
@@ -204,7 +205,7 @@ public class StatsManager {
 
         double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
 
-        balanceRepository.save(new Balance(minTransactionDate.get().getDate(),
+        viewRepository.save(new View(minTransactionDate.get().getDate(),
                 maxTransactionDate.get().getDate(), income, expenses, balance, viewName));
     }
 
@@ -292,14 +293,15 @@ public class StatsManager {
         categorizedRepository.saveAll(categorized);
     }
 
-    public void calculateBalanceAvarage() {
-        Balance balance = balanceRepository.findAll().get(0);
-        long monthsCount = balanceMonthlyRepository.count();
-        double avgIncome = balance.getIncome()/monthsCount;
-        double avgExpense = balance.getExpenses()/monthsCount;
-        double avgBalance = balance.getPeriodBalance()/monthsCount;
-        if (balanceAvarageRepository.count() != 0) balanceAvarageRepository.deleteAll();
-        balanceAvarageRepository.save(new BalanceAvarage(avgIncome, avgExpense, avgBalance));
+    public void calculateBalanceAvarage(String viewName) {
+        View view = viewRepository.findByViewName(viewName);
+        Period period = Period.between(view.getFrom_date(), view.getTo());
+        long monthsCount = period.getMonths();
+        if (period.getDays() > 0) monthsCount++;
+        double avgIncome = view.getIncome()/monthsCount;
+        double avgExpense = view.getExpenses()/monthsCount;
+        double avgBalance = view.getPeriodBalance()/monthsCount;
+        balanceAvarageRepository.save(new ViewAvarage(avgIncome, avgExpense, avgBalance, viewName));
     }
 
     public Map<YearMonth, Set<CategorizedMonthly>> calculateCategorizedMonthly() {

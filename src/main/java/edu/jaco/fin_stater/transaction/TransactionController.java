@@ -68,7 +68,7 @@ public class TransactionController {
         Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
-        statsManager.calculateBalanceAvarage();
+        statsManager.calculateBalanceAvarage("Full date range");
 
         logger.info("uploadTransactions - exiting");
     }
@@ -85,6 +85,6 @@ public class TransactionController {
         Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
-        statsManager.calculateBalanceAvarage();
+        statsManager.calculateBalanceAvarage("");
     }
 }
