@@ -151,4 +151,21 @@ public class Transaction {
     public void setUsedForCalculation(boolean usedForCalculation) {
         this.usedForCalculation = usedForCalculation;
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", date=" + date +
+                ", amount=" + amount +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", description='" + description + '\'' +
+                ", additional_info='" + additional_info + '\'' +
+                ", additional_info_2='" + additional_info_2 + '\'' +
+                ", category=" + category +
+                ", subcategory=" + subcategory +
+                ", usedForCalculation=" + usedForCalculation +
+                '}';
+    }
 }
