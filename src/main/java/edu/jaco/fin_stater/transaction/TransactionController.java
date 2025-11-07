@@ -74,10 +74,13 @@ public class TransactionController {
     }
 
     @CrossOrigin
-    @PatchMapping("/transaction/{id}")
+    @PatchMapping("/transaction/toogleforstats/{id}")
     public void toogleTransactionForStats(@RequestHeader("mode") String mode, @PathVariable Long id) {
+        logger.info("toogleTransactionForStats - entered");
+
         Optional<Transaction> transaction = transactionRespository.findById(id);
         transaction.ifPresent(tr -> {
+            logger.info("toogleTransactionForStats - found transaction: " + tr.toString());
             tr.setUsedForCalculation(!tr.isUsedForCalculation());
             transactionRespository.save(tr);
         });
@@ -85,6 +88,8 @@ public class TransactionController {
         Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
-        statsManager.calculateBalanceAvarage("");
+        statsManager.calculateBalanceAvarage("Full date range");
+
+        logger.info("toogleTransactionForStats - exiting");
     }
 }
