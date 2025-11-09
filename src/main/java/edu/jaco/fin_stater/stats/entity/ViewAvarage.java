@@ -1,9 +1,6 @@
 package edu.jaco.fin_stater.stats.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 @Entity
 public class ViewAvarage extends View {
@@ -33,5 +30,17 @@ public class ViewAvarage extends View {
 
     public double getAvarageBalance() {
         return avarageBalance;
+    }
+
+    public void setAvarageIncome(double avarageIncome) {
+        this.avarageIncome = avarageIncome;
+    }
+
+    public void setAvarageExpenses(double avarageExpenses) {
+        this.avarageExpenses = avarageExpenses;
+    }
+
+    public void setAvarageBalance(double avarageBalance) {
+        this.avarageBalance = avarageBalance;
     }
 }

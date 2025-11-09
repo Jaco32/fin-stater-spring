@@ -6,10 +6,9 @@ import edu.jaco.fin_stater.stats.repo.ViewAvarageRepository;
 import edu.jaco.fin_stater.stats.repo.BalanceMonthlyRepository;
 import edu.jaco.fin_stater.stats.repo.ViewRepository;
 import edu.jaco.fin_stater.stats.repo.CategorizedRepository;
-import edu.jaco.fin_stater.transaction.Transaction;
-import edu.jaco.fin_stater.transaction.TransactionCategory;
-import edu.jaco.fin_stater.transaction.TransactionRespository;
-import edu.jaco.fin_stater.transaction.TransactionSubcategory;
+import edu.jaco.fin_stater.transaction.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class StatsManager {
+
+    Logger logger = LoggerFactory.getLogger(StatsManager.class);
 
     @Autowired
     private ViewRepository viewRepository;
@@ -35,6 +36,8 @@ public class StatsManager {
 
     @Autowired
     ViewAvarageRepository balanceAvarageRepository;
+
+    private String currentView = "Full date range";
 
     public StatsManager() {}
 
@@ -161,32 +164,14 @@ public class StatsManager {
         }
     }
 
-    public void calculateBalance() {
-        List<Transaction> transactions = transactionRespository.findAll();
-
-        Comparator<Transaction> transactionDateComparator = Comparator.comparing(Transaction::getDate);
-        Optional<Transaction> minTransactionDate = transactions.stream().min(transactionDateComparator);
-        Optional<Transaction> maxTransactionDate = transactions.stream().max(transactionDateComparator);
-
-        double income = transactions.stream()
-                .filter(tr -> tr.isUsedForCalculation())
-                .mapToDouble(tr -> tr.getAmount())
-                .filter(am -> am > 0.0)
-                .sum();
-
-        double expenses = transactions.stream()
-                .filter(tr -> tr.isUsedForCalculation())
-                .mapToDouble(tr -> tr.getAmount())
-                .filter(am -> am < 0.0)
-                .sum();
-
-        double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
-
-        viewRepository.save(new View(minTransactionDate.get().getDate(),
-                maxTransactionDate.get().getDate(), income, expenses, balance, "Full date range"));
+    public void calculateBalance(List<Transaction> transactions, String viewName) {
+        currentView = viewName;
+        calculateBalance(transactions);
     }
 
-    public void calculateBalance(List<Transaction> transactions, String viewName) {
+    public void calculateBalance(List<Transaction> transactions) {
+        logger.info("calculateBalance - entered");
+
         Comparator<Transaction> transactionDateComparator = Comparator.comparing(Transaction::getDate);
         Optional<Transaction> minTransactionDate = transactions.stream().min(transactionDateComparator);
         Optional<Transaction> maxTransactionDate = transactions.stream().max(transactionDateComparator);
@@ -206,10 +191,40 @@ public class StatsManager {
         double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
 
         viewRepository.save(new View(minTransactionDate.get().getDate(),
-                maxTransactionDate.get().getDate(), income, expenses, balance, viewName));
+                maxTransactionDate.get().getDate(), income, expenses, balance, currentView));
+    }
+
+    public void updateBalance(List<Transaction> transactions) {
+        logger.info("updateBalance - entered");
+
+        Comparator<Transaction> transactionDateComparator = Comparator.comparing(Transaction::getDate);
+        Optional<Transaction> minTransactionDate = transactions.stream().min(transactionDateComparator);
+        Optional<Transaction> maxTransactionDate = transactions.stream().max(transactionDateComparator);
+
+        double income = transactions.stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .mapToDouble(tr -> tr.getAmount())
+                .filter(am -> am > 0.0)
+                .sum();
+
+        double expenses = transactions.stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .mapToDouble(tr -> tr.getAmount())
+                .filter(am -> am < 0.0)
+                .sum();
+
+        double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
+
+        View view = viewRepository.findByViewName(currentView).get(0);
+        view.setIncome(income);
+        view.setExpenses(expenses);
+        view.setPeriodBalance(balance);
+        viewRepository.save(view);
     }
 
     public void calculateBalanceMonthly(Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly) {
+        logger.info("calculateBalanceMonthly - entered");
+
         Map<YearMonth, Map<String, Double>> result = new TreeMap<>();
 
         List<Transaction> transactions = transactionRespository.findAll()
@@ -263,6 +278,8 @@ public class StatsManager {
     }
 
     public void calculateCategorized() {
+        logger.info("calculateCategorized - entered");
+
         Map<TransactionCategory, Double> result = new HashMap<>();
 
         List<Transaction> transactions = transactionRespository.findAll()
@@ -294,17 +311,43 @@ public class StatsManager {
     }
 
     public void calculateBalanceAvarage(String viewName) {
-        View view = viewRepository.findByViewName(viewName);
+        currentView = viewName;
+        calculateBalanceAvarage();
+    }
+
+    public void calculateBalanceAvarage() {
+        logger.info("calculateBalanceAvarage - entered");
+        View view = viewRepository.findByViewName(currentView).get(0);
         Period period = Period.between(view.getFrom_date(), view.getTo());
         long monthsCount = period.getMonths();
         if (period.getDays() > 0) monthsCount++;
         double avgIncome = view.getIncome()/monthsCount;
         double avgExpense = view.getExpenses()/monthsCount;
         double avgBalance = view.getPeriodBalance()/monthsCount;
-        balanceAvarageRepository.save(new ViewAvarage(avgIncome, avgExpense, avgBalance, viewName));
+        balanceAvarageRepository.save(new ViewAvarage(avgIncome, avgExpense, avgBalance, currentView));
+    }
+
+    public void updateBalanceAvarage() {
+        logger.info("updateBalanceAvarage - entered");
+
+        View view = viewRepository.findByViewName(currentView).get(0);
+        Period period = Period.between(view.getFrom_date(), view.getTo());
+        long monthsCount = period.getMonths();
+        if (period.getDays() > 0) monthsCount++;
+        double avgIncome = view.getIncome()/monthsCount;
+        double avgExpense = view.getExpenses()/monthsCount;
+        double avgBalance = view.getPeriodBalance()/monthsCount;
+
+        ViewAvarage viewAvarage = balanceAvarageRepository.findByViewName(currentView).get(0);
+        viewAvarage.setAvarageIncome(avgIncome);
+        viewAvarage.setAvarageExpenses(avgExpense);
+        viewAvarage.setAvarageBalance(avgBalance);
+        balanceAvarageRepository.save(viewAvarage);
     }
 
     public Map<YearMonth, Set<CategorizedMonthly>> calculateCategorizedMonthly() {
+        logger.info("calculateCategorizedMonthly - entered");
+
         Map<YearMonth, Set<CategorizedMonthly>> result = new TreeMap<>();
 
         List<Transaction> transactions = transactionRespository.findAll()
@@ -342,11 +385,6 @@ public class StatsManager {
                     result.put(mapKey, newList);
                 }
             }
-        }
-
-        for(YearMonth ym: result.keySet()) {
-            Set<CategorizedMonthly> cm = result.get(ym);
-            cm.forEach(it -> System.out.println("Kategoria: " + it.getCategory() + ", " + it.getExpense()));
         }
 
         return result;

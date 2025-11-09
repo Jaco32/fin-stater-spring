@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
+@RequestMapping("transaction")
 public class TransactionController {
 
     Logger logger = LoggerFactory.getLogger(TransactionController.class);
@@ -36,26 +37,26 @@ public class TransactionController {
     private SantanderTranzMgr santanderTranzMgr;
 
     @CrossOrigin
-    @GetMapping("/transaction")
+    @GetMapping()
     public List<Transaction> getTransaction(@RequestHeader("mode") String mode) {
         logger.info("getTransaction - entered");
         return transactionRespository.findAll(Sort.by("date").descending());
     }
 
     @CrossOrigin
-    @GetMapping("/transaction/type/{type}")
+    @GetMapping("type/{type}")
     public List<Transaction> getTransactionByType(@RequestHeader("mode") String mode, @PathVariable String type) {
         return transactionRespository.findByType(type);
     }
 
     @CrossOrigin
-    @GetMapping("/transaction/sender/{sender}")
+    @GetMapping("sender/{sender}")
     public List<Transaction> getTransactionBySender(@RequestHeader("mode") String mode, @PathVariable String sender) {
         return transactionRespository.findBySender(sender);
     }
 
     @CrossOrigin
-    @PostMapping("/transaction/upload/")
+    @PostMapping("upload/")
     public void uploadTransactions(@RequestHeader("mode") String mode,
                                    @RequestHeader("Content-Type") String contentType,
                                    @RequestBody byte[] fileContent) throws CsvValidationException, IOException
@@ -64,17 +65,18 @@ public class TransactionController {
         if(contentType.equals("text/csv")) santanderTranzMgr.loadTransactionsFromAPI(fileContent);
         else pkoBpTranzMgr.loadTransactionsFromAPI(fileContent);
 
-        statsManager.calculateBalance();
+        List<Transaction> transactions = transactionRespository.findAll();
+        statsManager.calculateBalance(transactions);
         Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
-        statsManager.calculateBalanceAvarage("Full date range");
+        statsManager.calculateBalanceAvarage();
 
         logger.info("uploadTransactions - exiting");
     }
 
     @CrossOrigin
-    @PatchMapping("/transaction/toogleforstats/{id}")
+    @PatchMapping("toogleforstats/{id}")
     public void toogleTransactionForStats(@RequestHeader("mode") String mode, @PathVariable Long id) {
         logger.info("toogleTransactionForStats - entered");
 
@@ -84,11 +86,12 @@ public class TransactionController {
             tr.setUsedForCalculation(!tr.isUsedForCalculation());
             transactionRespository.save(tr);
         });
-        statsManager.calculateBalance();
+        statsManager.updateBalance(transactionRespository.findAll());
         Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
-        statsManager.calculateBalanceAvarage("Full date range");
+        statsManager.calculateBalanceAvarage();
+        statsManager.updateBalanceAvarage();
 
         logger.info("toogleTransactionForStats - exiting");
     }
