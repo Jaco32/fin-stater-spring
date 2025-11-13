@@ -90,7 +90,6 @@ public class TransactionController {
         Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
-        statsManager.calculateBalanceAvarage();
         statsManager.updateBalanceAvarage();
 
         logger.info("toogleTransactionForStats - exiting");

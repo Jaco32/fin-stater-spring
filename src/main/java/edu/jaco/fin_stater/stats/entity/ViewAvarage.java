@@ -2,6 +2,8 @@ package edu.jaco.fin_stater.stats.entity;
 
 import jakarta.persistence.Entity;
 
+import java.time.LocalDate;
+
 @Entity
 public class ViewAvarage extends View {
 
@@ -13,11 +15,20 @@ public class ViewAvarage extends View {
 
     public ViewAvarage() {}
 
-    public ViewAvarage(double income, double expenses, double balance, String viewName) {
-        this.avarageIncome = income;
-        this.avarageExpenses = expenses;
-        this.avarageBalance = balance;
-        this.viewName = viewName;
+    public ViewAvarage(LocalDate from,
+                       LocalDate to,
+                       double income,
+                       double expenses,
+                       double balance,
+                       String viewName,
+                       double avgIncome,
+                       double avgExpenses,
+                       double avgBalance)
+    {
+        super(from, to, income, expenses, balance, viewName);
+        this.avarageIncome = avgIncome;
+        this.avarageExpenses = avgExpenses;
+        this.avarageBalance = avgBalance;
     }
 
     public double getAvarageIncome() {
@@ -42,5 +53,15 @@ public class ViewAvarage extends View {
 
     public void setAvarageBalance(double avarageBalance) {
         this.avarageBalance = avarageBalance;
+    }
+
+    @Override
+    public String toString() {
+        return "ViewAvarage{" +
+                "avarageIncome=" + avarageIncome +
+                ", avarageExpenses=" + avarageExpenses +
+                ", avarageBalance=" + avarageBalance +
+                ", viewName='" + viewName + '\'' +
+                '}';
     }
 }
