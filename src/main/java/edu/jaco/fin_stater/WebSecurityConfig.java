@@ -19,6 +19,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/user/create/*/*").permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/user/login/*/*").permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/transaction/upload/").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/transaction/add/").permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.PATCH, "/transaction/toogleforstats/*").permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/transaction").permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/stat").permitAll())

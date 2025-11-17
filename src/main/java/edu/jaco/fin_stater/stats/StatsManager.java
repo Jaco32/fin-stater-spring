@@ -202,10 +202,6 @@ public class StatsManager {
     public void updateBalance(List<Transaction> transactions) {
         logger.info("updateBalance - entered");
 
-        Comparator<Transaction> transactionDateComparator = Comparator.comparing(Transaction::getDate);
-        Optional<Transaction> minTransactionDate = transactions.stream().min(transactionDateComparator);
-        Optional<Transaction> maxTransactionDate = transactions.stream().max(transactionDateComparator);
-
         double income = transactions.stream()
                 .filter(tr -> tr.isUsedForCalculation())
                 .mapToDouble(tr -> tr.getAmount())
@@ -337,30 +333,6 @@ public class StatsManager {
 
         List<ViewAvarage> avarageViews = balanceAvarageRepository.findByViewName(currentView);
         logger.info("calculateBalanceAvarage - avarage views count: " + avarageViews.size());
-        ViewAvarage viewAvarage = avarageViews.get(0);
-        viewAvarage.setAvarageIncome(avgIncome);
-        viewAvarage.setAvarageExpenses(avgExpense);
-        viewAvarage.setAvarageBalance(avgBalance);
-        balanceAvarageRepository.save(viewAvarage);
-    }
-
-    public void updateBalanceAvarage() {
-        logger.info("updateBalanceAvarage - entered");
-
-        List<View> views = viewRepository.findByViewName(currentView);
-        logger.info("updateBalanceAvarage - Views count: " + views.size());
-
-        View view = views.get(0);
-        Period period = Period.between(view.getFrom_date(), view.getTo());
-        long monthsCount = period.getYears()*12 + period.getMonths();
-        if (period.getDays() > 0) monthsCount++;
-        double avgIncome = view.getIncome()/monthsCount;
-        double avgExpense = view.getExpenses()/monthsCount;
-        double avgBalance = view.getPeriodBalance()/monthsCount;
-        logger.info("updateBalanceAvarage - Calculated avgs - period: " + period + ", monthsCount: " + monthsCount + ", avgIncome: " + avgIncome);
-
-        List<ViewAvarage> avarageViews = balanceAvarageRepository.findByViewName(currentView);
-        logger.info("updateBalanceAvarage - ViewAvarage count: " + avarageViews.size());
         ViewAvarage viewAvarage = avarageViews.get(0);
         viewAvarage.setAvarageIncome(avgIncome);
         viewAvarage.setAvarageExpenses(avgExpense);

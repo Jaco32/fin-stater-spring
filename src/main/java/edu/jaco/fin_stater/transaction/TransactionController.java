@@ -76,6 +76,26 @@ public class TransactionController {
     }
 
     @CrossOrigin
+    @PostMapping("add/")
+    public void addTransactions(@RequestHeader("mode") String mode,
+                                   @RequestHeader("Content-Type") String contentType,
+                                   @RequestBody byte[] fileContent) throws CsvValidationException, IOException
+    {
+        logger.info("addTransactions - entered");
+        if(contentType.equals("text/csv")) santanderTranzMgr.loadTransactionsFromAPI(fileContent);
+        else pkoBpTranzMgr.loadTransactionsFromAPI(fileContent);
+
+        List<Transaction> transactions = transactionRespository.findAll();
+        statsManager.updateBalance(transactions);
+        Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
+        statsManager.calculateBalanceMonthly(calegorizedMonthly);
+        statsManager.calculateCategorized();
+        statsManager.calculateBalanceAvarage();
+
+        logger.info("addTransactions - exiting");
+    }
+
+    @CrossOrigin
     @PatchMapping("toogleforstats/{id}")
     public void toogleTransactionForStats(@RequestHeader("mode") String mode, @PathVariable Long id) {
         logger.info("toogleTransactionForStats - entered");
@@ -90,7 +110,7 @@ public class TransactionController {
         Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
-        statsManager.updateBalanceAvarage();
+        statsManager.calculateBalanceAvarage();
 
         logger.info("toogleTransactionForStats - exiting");
     }
