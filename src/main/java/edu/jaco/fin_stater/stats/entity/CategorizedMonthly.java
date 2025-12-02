@@ -4,6 +4,7 @@ import edu.jaco.fin_stater.transaction.TransactionCategory;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "categorized_monthly")
 public class CategorizedMonthly {
 
     @Id

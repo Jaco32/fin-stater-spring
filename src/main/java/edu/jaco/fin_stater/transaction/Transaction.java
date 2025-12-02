@@ -30,8 +30,10 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionFrequency frequency;
 
+    @Column(name = "category_match_keyword")
     private String categoryMatchKeyword;
 
+    @Column(name = "used_for_calculation")
     private boolean usedForCalculation;
 
     public Transaction() {}

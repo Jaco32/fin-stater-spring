@@ -202,8 +202,9 @@ public class UserController {
     @CrossOrigin
     @PostMapping("login/{name}/{password}")
     public void loginUser(@RequestHeader("mode") String mode, @PathVariable String name, @PathVariable String password) {
-        logger.info("loginUser - entered");
-        userRoutingDataSource.setLookupKey(name.toUpperCase());
-        logger.info("loginUser - entered");
+        logger.info("loginUser - entered with name: " + name);
+        String lookUpKey = "FIN_STATER_" + name.toUpperCase() + "_SCHEMA";
+        userRoutingDataSource.setLookupKey(lookUpKey);
+        logger.info("loginUser - exiting");
     }
 }

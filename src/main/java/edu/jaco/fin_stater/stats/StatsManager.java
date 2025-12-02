@@ -263,6 +263,7 @@ public class StatsManager {
             Double income = monthEntry.getValue().get("income");
             Double expenses = monthEntry.getValue().get("expense");
             Double balance = income - (-1*expenses);
+            logger.info("calculateBalanceMonthly - calculated income: " + income + ", balance: " + balance);
             double rateOfReturn = (balance / income) * 100;
             ArrayList<CategorizedMonthly> categorizedMonth = new ArrayList<>(calegorizedMonthly.get(monthEntry.getKey()));
             Comparator<CategorizedMonthly> categoryComparator = Comparator.comparing(CategorizedMonthly::getExpense);
@@ -381,6 +382,8 @@ public class StatsManager {
                 }
             }
         }
+
+        logger.info("calculateCategorizedMonthly - exiting with: " + result);
 
         return result;
     }

@@ -4,16 +4,21 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "balance_monthly")
 public class BalanceMonthly {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "month_name")
     String monthName;
+
     private double income;
     private double expenses;
     private double balance;
+
+    @Column(name = "rate_of_return")
     private double rateOfReturn;
 
     @OneToMany(cascade = CascadeType.ALL)

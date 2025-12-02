@@ -1,5 +1,6 @@
 package edu.jaco.fin_stater.stats.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 import java.time.LocalDate;
@@ -7,10 +8,13 @@ import java.time.LocalDate;
 @Entity
 public class ViewAvarage extends View {
 
+    @Column(name = "avarage_income")
     private double avarageIncome;
 
+    @Column(name = "avarage_expenses")
     private double avarageExpenses;
 
+    @Column(name = "avarage_balance")
     private double avarageBalance;
 
     public ViewAvarage() {}

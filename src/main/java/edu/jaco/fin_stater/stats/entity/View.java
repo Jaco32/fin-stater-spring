@@ -1,9 +1,6 @@
 package edu.jaco.fin_stater.stats.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -14,11 +11,19 @@ public class View {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "from_date")
     private LocalDate fromDate;
+
+    @Column(name = "to_date")
     private LocalDate toDate;
+
     private double income;
     private double expenses;
+
+    @Column(name = "period_balance")
     private double periodBalance;
+
+    @Column(name = "view_name")
     protected String viewName;
 
     public View() {}
