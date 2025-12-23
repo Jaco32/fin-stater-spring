@@ -2,16 +2,14 @@ package edu.jaco.fin_stater.transaction;
 
 public enum TransactionCategory {
     SPOZYWCZE,
-    ZDROWIE,
-    HIGIENA,
+    CIALO,
+    AUTO,
     OPLATY,
     DZIECI,
-    PALIWO,
-    AUTO,
     DOM,
     ROWER,
-    DOMINO,
     BANKOMAT,
     KARTA_KREDYTOWA,
+    WAKACJE,
     OTHER
 }

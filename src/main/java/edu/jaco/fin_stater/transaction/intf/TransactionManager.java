@@ -1,11 +1,14 @@
 package edu.jaco.fin_stater.transaction.intf;
 
 import edu.jaco.fin_stater.dictionaries.cats.*;
+import edu.jaco.fin_stater.dictionaries.cats.body.CialoDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.body.subcats.HigienaDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.body.subcats.ZdrowieDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.car.AutoDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.car.subcats.PaliwoDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.car.subcats.SerwisDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.food.SpozywczeDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.food.subcats.SlodkosciDictionary;
 import edu.jaco.fin_stater.dictionaries.freqs.*;
 import edu.jaco.fin_stater.dictionaries.cats.food.subcats.ZamawianeDictionary;
 import edu.jaco.fin_stater.transaction.*;
@@ -87,12 +90,8 @@ public abstract class TransactionManager {
     {
         if(SpozywczeDictionary.matchTransactionRow(transactionRow)) {
             transactionRow.setCategory(TransactionCategory.SPOZYWCZE);
-        } else if(ZdrowieDictionary.matchTransactionRow(transactionRow)) {
-            transactionRow.setCategory(TransactionCategory.ZDROWIE);
-        } else if(HigienaDictionary.matchTransactionRow(transactionRow)) {
-            transactionRow.setCategory(TransactionCategory.HIGIENA);
-        } else if(PaliwoDictionary.matchTransactionRow(transactionRow)) {
-            transactionRow.setCategory(TransactionCategory.PALIWO);
+        } else if(CialoDictionary.matchTransactionRow(transactionRow)) {
+            transactionRow.setCategory(TransactionCategory.CIALO);
         } else if(AutoDictionary.matchTransactionRow(transactionRow)) {
             transactionRow.setCategory(TransactionCategory.AUTO);
         } else if(RowerDictionary.matchTransactionRow(transactionRow)) {
@@ -115,8 +114,25 @@ public abstract class TransactionManager {
     protected void subCategorizeRow(Transaction transactionRow) {
         if(ZamawianeDictionary.matchTransactionRow(transactionRow)) {
             transactionRow.setSubcategory(TransactionSubcategory.SPOZYWCZE_ZAMAWIANE);
+        } else if(SlodkosciDictionary.matchTransactionRow(transactionRow)) {
+            transactionRow.setSubcategory(TransactionSubcategory.SPOZYWCZE_SLODKOSCI);
+        } else if(PaliwoDictionary.matchTransactionRow(transactionRow)) {
+            transactionRow.setSubcategory(TransactionSubcategory.AUTO_PALIWO);
+        } else if(SerwisDictionary.matchTransactionRow(transactionRow)) {
+            transactionRow.setSubcategory(TransactionSubcategory.AUTO_SERWIS);
+        } else if(HigienaDictionary.matchTransactionRow(transactionRow)) {
+            transactionRow.setSubcategory(TransactionSubcategory.CIALO_HIGIENA);
+        } else if(ZdrowieDictionary.matchTransactionRow(transactionRow)) {
+            transactionRow.setSubcategory(TransactionSubcategory.CIALO_ZDROWIE);
         } else {
-            transactionRow.setSubcategory(TransactionSubcategory.OTHER);
+            if(transactionRow.getCategory() == TransactionCategory.SPOZYWCZE)
+                transactionRow.setSubcategory(TransactionSubcategory.SPOZYWCZE_OTHER);
+            else if(transactionRow.getCategory() == TransactionCategory.AUTO)
+                transactionRow.setSubcategory(TransactionSubcategory.AUTO_OTHER);
+            else if(transactionRow.getCategory() == TransactionCategory.CIALO)
+                transactionRow.setSubcategory(TransactionSubcategory.CIALO_OTHER);
+            else
+                transactionRow.setSubcategory(TransactionSubcategory.OTHER);
         }
     }
 

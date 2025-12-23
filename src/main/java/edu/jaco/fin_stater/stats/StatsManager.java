@@ -303,12 +303,29 @@ public class StatsManager {
 
         List<Categorized> categorized = new ArrayList<>();
         for(Map.Entry<TransactionCategory, Double> categoryEntry: result.entrySet()) {
-            if(categoryEntry.getKey() != TransactionCategory.SPOZYWCZE)
-                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), null));
-            else {
-                logger.info("Adding subcategories for SPOZYWCZE: " + resultSubcategories);
-                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), resultSubcategories));
+            if(categoryEntry.getKey() == TransactionCategory.SPOZYWCZE) {
+                Map<TransactionSubcategory, Double> spozywczeSubcategories = new HashMap<>();
+                spozywczeSubcategories.put(TransactionSubcategory.SPOZYWCZE_ZAMAWIANE, resultSubcategories.get(TransactionSubcategory.SPOZYWCZE_ZAMAWIANE));
+                spozywczeSubcategories.put(TransactionSubcategory.SPOZYWCZE_SLODKOSCI, resultSubcategories.get(TransactionSubcategory.SPOZYWCZE_SLODKOSCI));
+                spozywczeSubcategories.put(TransactionSubcategory.SPOZYWCZE_OTHER, resultSubcategories.get(TransactionSubcategory.SPOZYWCZE_OTHER));
+                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), spozywczeSubcategories));
             }
+            else if (categoryEntry.getKey() == TransactionCategory.CIALO) {
+                Map<TransactionSubcategory, Double> cialoSubcategories = new HashMap<>();
+                cialoSubcategories.put(TransactionSubcategory.CIALO_HIGIENA, resultSubcategories.get(TransactionSubcategory.CIALO_HIGIENA));
+                cialoSubcategories.put(TransactionSubcategory.CIALO_ZDROWIE, resultSubcategories.get(TransactionSubcategory.CIALO_ZDROWIE));
+                cialoSubcategories.put(TransactionSubcategory.CIALO_BEAUTY, resultSubcategories.get(TransactionSubcategory.CIALO_BEAUTY));
+                cialoSubcategories.put(TransactionSubcategory.CIALO_OTHER, resultSubcategories.get(TransactionSubcategory.CIALO_OTHER));
+                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), cialoSubcategories));
+            }
+            else if (categoryEntry.getKey() == TransactionCategory.AUTO) {
+                Map<TransactionSubcategory, Double> autoSubcategories = new HashMap<>();
+                autoSubcategories.put(TransactionSubcategory.AUTO_PALIWO, resultSubcategories.get(TransactionSubcategory.AUTO_PALIWO));
+                autoSubcategories.put(TransactionSubcategory.AUTO_SERWIS, resultSubcategories.get(TransactionSubcategory.AUTO_SERWIS));
+                autoSubcategories.put(TransactionSubcategory.AUTO_OTHER, resultSubcategories.get(TransactionSubcategory.AUTO_OTHER));
+                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), autoSubcategories));
+            }
+            else categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), null));
         }
         Comparator<Categorized> categoryComparator = Comparator.comparing(Categorized::getExpense);
         categorized.sort(categoryComparator);
