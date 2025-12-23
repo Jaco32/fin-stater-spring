@@ -178,6 +178,7 @@ public class UserController {
 
                 statement.execute(categorizedTableSql);
                 statement.execute("create sequence categorized_seq start with 1 increment by 50");
+                statement.execute("create table categorized_subrategory_stat (subrategory_stat float(53), subrategory_stat_key tinyint not null check (subrategory_stat_key between 0 and 1), categorized_id bigint not null, primary key (subrategory_stat_key, categorized_id))");
 
                 statement.execute(categorizedMonthlyTableSql);
                 statement.execute("create sequence categorized_monthly_seq start with 1 increment by 50");

@@ -70,18 +70,6 @@ public class StatsManager {
         }
     }
 
-    public void printSubcategoryView(List<Transaction> transactions, TransactionSubcategory subcategory)
-    {
-        double sum = 0.0;
-        for (Transaction transaction : transactions) {
-            if(transaction.getSubcategory() == subcategory) {
-                sum += transaction.getAmount();
-            }
-        }
-
-        System.out.println(subcategory.name() + ", sum = " + sum);
-    }
-
     public void printPosView(List<Transaction> transactions, TransactionCategory category, int month) {
         List<PosDto> posList = new ArrayList<>();
 
@@ -282,13 +270,12 @@ public class StatsManager {
     public void calculateCategorized() {
         logger.info("calculateCategorized - entered");
 
-        Map<TransactionCategory, Double> result = new HashMap<>();
-
         List<Transaction> transactions = transactionRespository.findAll()
                 .stream()
                 .filter(tr -> tr.isUsedForCalculation())
                 .collect(Collectors.toList());
 
+        Map<TransactionCategory, Double> result = new HashMap<>();
         for(Transaction transaction: transactions) {
             if(transaction.getAmount() < 0d) {
                 if (result.containsKey(transaction.getCategory())) {
@@ -301,9 +288,27 @@ public class StatsManager {
             }
         }
 
+        Map<TransactionSubcategory, Double> resultSubcategories = new HashMap<>();
+        for(Transaction transaction: transactions) {
+            if(transaction.getAmount() < 0d) {
+                if (resultSubcategories.containsKey(transaction.getSubcategory())) {
+                    Double current = resultSubcategories.get(transaction.getSubcategory());
+                    current += transaction.getAmount();
+                    resultSubcategories.replace(transaction.getSubcategory(), current);
+                } else {
+                    resultSubcategories.put(transaction.getSubcategory(), transaction.getAmount());
+                }
+            }
+        }
+
         List<Categorized> categorized = new ArrayList<>();
         for(Map.Entry<TransactionCategory, Double> categoryEntry: result.entrySet()) {
-            categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue()));
+            if(categoryEntry.getKey() != TransactionCategory.SPOZYWCZE)
+                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), null));
+            else {
+                logger.info("Adding subcategories for SPOZYWCZE: " + resultSubcategories);
+                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), resultSubcategories));
+            }
         }
         Comparator<Categorized> categoryComparator = Comparator.comparing(Categorized::getExpense);
         categorized.sort(categoryComparator);

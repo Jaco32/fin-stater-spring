@@ -1,8 +1,13 @@
 package edu.jaco.fin_stater.transaction.intf;
 
 import edu.jaco.fin_stater.dictionaries.cats.*;
+import edu.jaco.fin_stater.dictionaries.cats.body.subcats.HigienaDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.body.subcats.ZdrowieDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.car.AutoDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.car.subcats.PaliwoDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.food.SpozywczeDictionary;
 import edu.jaco.fin_stater.dictionaries.freqs.*;
-import edu.jaco.fin_stater.dictionaries.subcats.ZamawianeDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.food.subcats.ZamawianeDictionary;
 import edu.jaco.fin_stater.transaction.*;
 import com.opencsv.exceptions.CsvValidationException;
 import edu.jaco.fin_stater.transaction.Transaction;
@@ -96,8 +101,6 @@ public abstract class TransactionManager {
             transactionRow.setCategory(TransactionCategory.DZIECI);
         } else if(OplatyDictionary.matchTransactionRow(transactionRow)) {
             transactionRow.setCategory(TransactionCategory.OPLATY);
-        } else if(DominoDictionary.matchTransactionRow(transactionRow)) {
-            transactionRow.setCategory(TransactionCategory.DOMINO);
         } else if(KartaKredytowaDictionary.matchTransactionRow(transactionRow)) {
             transactionRow.setCategory(TransactionCategory.KARTA_KREDYTOWA);
         } else if(DomDictionary.matchTransactionRow(transactionRow)) {
