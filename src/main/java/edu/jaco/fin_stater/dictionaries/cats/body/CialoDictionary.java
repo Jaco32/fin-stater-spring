@@ -33,7 +33,11 @@ public enum CialoDictionary {
     CENTRUM_MEDYCZNE_UNIMED ("centrum medyczne unimed"),
     MED_FILE_PL ("app.medfile.pl"),
     DAFI ("dafi.pl"),
-    AROMAMA ("aromama.pl");
+    AROMAMA ("aromama.pl"),
+
+    // Beauty
+    SO_BEAUTY ("so beauty"),
+    FIU_FIU ("fiu fiu");
 
     private String sentence;
 

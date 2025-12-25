@@ -307,6 +307,7 @@ public class StatsManager {
                 Map<TransactionSubcategory, Double> spozywczeSubcategories = new HashMap<>();
                 spozywczeSubcategories.put(TransactionSubcategory.SPOZYWCZE_ZAMAWIANE, resultSubcategories.get(TransactionSubcategory.SPOZYWCZE_ZAMAWIANE));
                 spozywczeSubcategories.put(TransactionSubcategory.SPOZYWCZE_SLODKOSCI, resultSubcategories.get(TransactionSubcategory.SPOZYWCZE_SLODKOSCI));
+                spozywczeSubcategories.put(TransactionSubcategory.SPOZYWCZE_MARKETY, resultSubcategories.get(TransactionSubcategory.SPOZYWCZE_MARKETY));
                 spozywczeSubcategories.put(TransactionSubcategory.SPOZYWCZE_OTHER, resultSubcategories.get(TransactionSubcategory.SPOZYWCZE_OTHER));
                 categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), spozywczeSubcategories));
             }
@@ -324,6 +325,12 @@ public class StatsManager {
                 autoSubcategories.put(TransactionSubcategory.AUTO_SERWIS, resultSubcategories.get(TransactionSubcategory.AUTO_SERWIS));
                 autoSubcategories.put(TransactionSubcategory.AUTO_OTHER, resultSubcategories.get(TransactionSubcategory.AUTO_OTHER));
                 categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), autoSubcategories));
+            }
+            else if (categoryEntry.getKey() == TransactionCategory.DZIECI) {
+                Map<TransactionSubcategory, Double> dzieciSubcategories = new HashMap<>();
+                dzieciSubcategories.put(TransactionSubcategory.DZIECI_PLACOWKI, resultSubcategories.get(TransactionSubcategory.DZIECI_PLACOWKI));
+                dzieciSubcategories.put(TransactionSubcategory.DZIECI_OTHER, resultSubcategories.get(TransactionSubcategory.DZIECI_OTHER));
+                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), dzieciSubcategories));
             }
             else categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), null));
         }

@@ -25,14 +25,14 @@ public class Categorized {
 
     @ElementCollection
     @Getter
-    private Map<TransactionSubcategory, Double> subrategoryStat;
+    private Map<TransactionSubcategory, Double> subcategoryStat;
 
     public Categorized(TransactionCategory category,
                        double expense,
-                       Map<TransactionSubcategory, Double> subrategoryStat)
+                       Map<TransactionSubcategory, Double> subcategoryStat)
     {
         this.category = category;
         this.expense = expense;
-        this.subrategoryStat = subrategoryStat;
+        this.subcategoryStat = subcategoryStat;
     }
 }

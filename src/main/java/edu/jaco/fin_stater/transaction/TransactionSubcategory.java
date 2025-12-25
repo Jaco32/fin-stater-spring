@@ -3,6 +3,7 @@ package edu.jaco.fin_stater.transaction;
 public enum TransactionSubcategory {
     SPOZYWCZE_ZAMAWIANE,
     SPOZYWCZE_SLODKOSCI,
+    SPOZYWCZE_MARKETY,
     SPOZYWCZE_OTHER,
     CIALO_ZDROWIE,
     CIALO_HIGIENA,
@@ -11,5 +12,7 @@ public enum TransactionSubcategory {
     AUTO_PALIWO,
     AUTO_SERWIS,
     AUTO_OTHER,
+    DZIECI_PLACOWKI,
+    DZIECI_OTHER,
     OTHER
 }

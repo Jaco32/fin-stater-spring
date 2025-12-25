@@ -1,4 +1,4 @@
-package edu.jaco.fin_stater.dictionaries.cats;
+package edu.jaco.fin_stater.dictionaries.cats.kids;
 
 import edu.jaco.fin_stater.transaction.Transaction;
 import lombok.AllArgsConstructor;
@@ -8,9 +8,11 @@ import java.util.Arrays;
 
 @AllArgsConstructor
 public enum DzieciDictionary {
+
     SMYK ("smyk"),
     MIKI ("salon dzieciecy miki"),
-    PEPCO ("pepco"),
+
+    // Placówki
     HEALTHY_KIDS_1 ("livekid.com"),
     HEALTHY_KIDS_2 ("healthy kids"),
     MISIOWE ("misiowe przedszkole"),
@@ -18,20 +20,24 @@ public enum DzieciDictionary {
     KACIK_MALUSZKA_2 ("k?cik maluszka"),
     KACIK_MALUSZKA_3 ("music math"),
     KACIK_MALUSZKA_4 ("musicmath.pl"),
-    BEBETTO ("aroshop.pl"),
-    MAMOLOGIA ("mamologia.pl"),
-    SCANMED ("scanmed"),
-    ROWER_HANI ("za różową strzałę"),
-    VINTED ("vinted"),
-    ENERGYLANDIA ("energylandia"),
-    ESTROMED ("katarzyna lenart"),
-    DIAGNOSTYKA ("diagnostyka"),
-    BAJKOWE_PODDASZE ("bajkowepoddasze"),
-    GOJUMP ("gojump"),
     PKOLE_LIVEKID_ALA ("wegorkiewicz alic"),
     PKOLE_LIVEKID_ANTOSIA ("wegorkiewicz ant"),
     ZLOBEK_ANIELKI_JEDZENIE ("gotowalnia.pl"),
-    CENTRUM_FOTELIKOW ("centrum fotelikow");
+
+    PEPCO ("pepco"),
+    BEBETTO ("aroshop.pl"),
+    CENTRUM_FOTELIKOW ("centrum fotelikow"),
+    VINTED ("vinted"),
+
+    ROWER_HANI ("za różową strzałę"),
+    ENERGYLANDIA ("energylandia"),
+    BAJKOWE_PODDASZE ("bajkowepoddasze"),
+    GOJUMP ("gojump"),
+
+    SCANMED ("scanmed"),
+    ESTROMED ("katarzyna lenart"),
+    DIAGNOSTYKA ("diagnostyka"),
+    MAMOLOGIA ("mamologia.pl");
 
     @Getter
     private String sentence;

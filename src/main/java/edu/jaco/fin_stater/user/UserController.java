@@ -49,27 +49,33 @@ public class UserController {
         "sender varchar(255)," +
         "type varchar(255)," +
         "category enum (" +
-            "'AUTO'," +
-            "'BANKOMAT'," +
-            "'DOM'," +
-            "'DOMINO'," +
-            "'DZIECI'," +
-            "'HIGIENA'," +
-            "'KARTA_KREDYTOWA'," +
-            "'OPLATY'," +
-            "'OTHER'," +
-            "'PALIWO'," +
-            "'ROWER'," +
             "'SPOZYWCZE'," +
-            "'ZDROWIE'," +
-            "'CHARYTATYWNE'," +
-            "'VINTED'," +
-            "'REVOLUT'," +
-            "'KONTO_WSPOLNE'," +
-            "'PORCELANA'," +
-            "'ONLINE'), " +
+            "'CIALO'," +
+            "'AUTO'," +
+            "'OPLATY'," +
+            "'DZIECI'," +
+            "'DOM'," +
+            "'ROWER'," +
+            "'BANKOMAT'," +
+            "'KARTA_KREDYTOWA'," +
+            "'WAKACJE'," +
+            "'OTHER')," +
         "frequency enum ('MONTHLY','OTHER','YEARLY'), " +
-        "subcategory enum ('OTHER','SPOZYWCZE_ZAMAWIANE'), " +
+        "subcategory enum (" +
+            "'SPOZYWCZE_ZAMAWIANE'," +
+            "'SPOZYWCZE_SLODKOSCI'," +
+            "'SPOZYWCZE_MARKETY'," +
+            "'SPOZYWCZE_OTHER'," +
+            "'CIALO_ZDROWIE'," +
+            "'CIALO_HIGIENA'," +
+            "'CIALO_BEAUTY'," +
+            "'CIALO_OTHER'," +
+            "'AUTO_PALIWO'," +
+            "'AUTO_SERWIS'," +
+            "'AUTO_OTHER'," +
+            "'DZIECI_PLACOWKI'," +
+            "'DZIECI_OTHER'," +
+            "'OTHER'), " +
         "primary key (id))";
 
     private final String viewTableSql = "create table view (" +
@@ -102,16 +108,13 @@ public class UserController {
                 "'AUTO'," +
                 "'BANKOMAT'," +
                 "'DOM'," +
-                "'DOMINO'," +
                 "'DZIECI'," +
-                "'HIGIENA'," +
+                "'CIALO'," +
                 "'KARTA_KREDYTOWA'," +
                 "'OPLATY'," +
                 "'OTHER'," +
-                "'PALIWO'," +
                 "'ROWER'," +
                 "'SPOZYWCZE'," +
-                "'ZDROWIE'," +
                 "'CHARYTATYWNE'," +
                 "'VINTED'," +
                 "'REVOLUT'," +
@@ -128,16 +131,13 @@ public class UserController {
             "'AUTO'," +
             "'BANKOMAT'," +
             "'DOM'," +
-            "'DOMINO'," +
             "'DZIECI'," +
-            "'HIGIENA'," +
+            "'CIALO'," +
             "'KARTA_KREDYTOWA'," +
             "'OPLATY'," +
             "'OTHER'," +
-            "'PALIWO'," +
             "'ROWER'," +
             "'SPOZYWCZE'," +
-            "'ZDROWIE'," +
             "'CHARYTATYWNE'," +
             "'VINTED'," +
             "'REVOLUT'," +
@@ -145,6 +145,12 @@ public class UserController {
             "'PORCELANA'," +
             "'ONLINE'), " +
         "primary key (id))";
+
+    private final String categorizedSubcategoryTableSql = "create table categorized_subcategory_stat (" +
+            "subcategory_stat float(53), " +
+            "subcategory_stat_key tinyint not null check (subcategory_stat_key between 0 and 13), " +
+            "categorized_id bigint not null, " +
+            "primary key (subcategory_stat_key, categorized_id))";
 
     @Value("${DB_URL}")
     private String dbUrl;
@@ -178,7 +184,7 @@ public class UserController {
 
                 statement.execute(categorizedTableSql);
                 statement.execute("create sequence categorized_seq start with 1 increment by 50");
-                statement.execute("create table categorized_subrategory_stat (subrategory_stat float(53), subrategory_stat_key tinyint not null check (subrategory_stat_key between 0 and 1), categorized_id bigint not null, primary key (subrategory_stat_key, categorized_id))");
+                statement.execute(categorizedSubcategoryTableSql);
 
                 statement.execute(categorizedMonthlyTableSql);
                 statement.execute("create sequence categorized_monthly_seq start with 1 increment by 50");
