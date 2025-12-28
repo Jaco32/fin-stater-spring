@@ -2,9 +2,12 @@ package edu.jaco.fin_stater.stats.entity;
 
 import edu.jaco.fin_stater.transaction.TransactionCategory;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "categorized_monthly")
+@NoArgsConstructor
 public class CategorizedMonthly {
 
     @Id
@@ -14,9 +17,8 @@ public class CategorizedMonthly {
     @Enumerated(EnumType.STRING)
     private TransactionCategory category;
 
+    @Getter
     private double expense;
-
-    private CategorizedMonthly() {}
 
     public CategorizedMonthly(TransactionCategory category, double expense) {
         this.category = category;
@@ -37,10 +39,6 @@ public class CategorizedMonthly {
 
     public void setCategory(TransactionCategory category) {
         this.category = category;
-    }
-
-    public double getExpense() {
-        return expense;
     }
 
     public void setExpense(double expense) {

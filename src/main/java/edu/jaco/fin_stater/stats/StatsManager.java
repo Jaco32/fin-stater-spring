@@ -211,7 +211,7 @@ public class StatsManager {
         viewRepository.save(view);
     }
 
-    public void calculateBalanceMonthly(Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly) {
+    public void calculateBalanceMonthly(Map<YearMonth, Set<CategorizedMonthly>> categorizedMonthly) {
         logger.info("calculateBalanceMonthly - entered");
 
         Map<YearMonth, Map<String, Double>> result = new TreeMap<>();
@@ -253,7 +253,7 @@ public class StatsManager {
             Double balance = income - (-1*expenses);
             logger.info("calculateBalanceMonthly - calculated income: " + income + ", balance: " + balance);
             double rateOfReturn = (balance / income) * 100;
-            ArrayList<CategorizedMonthly> categorizedMonth = new ArrayList<>(calegorizedMonthly.get(monthEntry.getKey()));
+            ArrayList<CategorizedMonthly> categorizedMonth = new ArrayList<>(categorizedMonthly.get(monthEntry.getKey()));
             Comparator<CategorizedMonthly> categoryComparator = Comparator.comparing(CategorizedMonthly::getExpense);
             categorizedMonth.sort(categoryComparator);
             BalanceMonthly balanceMonthly = new BalanceMonthly(

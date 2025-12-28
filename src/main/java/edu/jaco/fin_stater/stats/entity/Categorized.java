@@ -5,6 +5,7 @@ import edu.jaco.fin_stater.transaction.TransactionSubcategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLOrder;
 
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public class Categorized {
 
     @ElementCollection
     @Getter
+    @SQLOrder("subcategory_stat ASC")
     private Map<TransactionSubcategory, Double> subcategoryStat;
 
     public Categorized(TransactionCategory category,
