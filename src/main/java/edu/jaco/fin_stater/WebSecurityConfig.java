@@ -24,7 +24,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/transaction").permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/stat").permitAll())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/stat/*").permitAll())
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.PATCH, "/stat/view/*").permitAll());
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.PATCH, "/stat/view/*").permitAll())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.PATCH, "/stat/clear").permitAll());
         return httpSecurity.build();
     }
 

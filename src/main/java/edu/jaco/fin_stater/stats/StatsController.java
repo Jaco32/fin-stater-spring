@@ -86,4 +86,19 @@ public class StatsController {
         statsManager.calculateBalance(transactions, name);
         statsManager.calculateBalanceAvarage(name);
     }
+
+    @CrossOrigin
+    @PatchMapping("clear")
+    public void clearStats(@RequestHeader("mode") String mode) {
+        logger.info("clearStats - entered");
+
+        categorizedMonthlyRepository.deleteAll();
+        balanceMonthlyRepository.deleteAll();
+        categorizedRepository.deleteAll();
+        balanceAvarageRepository.deleteAll();
+        viewRepository.deleteAll();
+        transactionRespository.deleteAll();
+
+        logger.info("clearStats - exiting");
+    }
 }

@@ -3,6 +3,7 @@ package edu.jaco.fin_stater.transaction;
 import com.opencsv.exceptions.CsvValidationException;
 import edu.jaco.fin_stater.stats.StatsManager;
 import edu.jaco.fin_stater.stats.entity.CategorizedMonthly;
+import edu.jaco.fin_stater.stats.repo.ViewRepository;
 import edu.jaco.fin_stater.transaction.impl.PkoBpTranzMgr;
 import edu.jaco.fin_stater.transaction.impl.SantanderTranzMgr;
 import org.slf4j.Logger;
@@ -35,6 +36,9 @@ public class TransactionController {
 
     @Autowired
     private SantanderTranzMgr santanderTranzMgr;
+
+    @Autowired
+    private ViewRepository viewRepository;
 
     @CrossOrigin
     @GetMapping()
@@ -86,7 +90,8 @@ public class TransactionController {
         else pkoBpTranzMgr.loadTransactionsFromAPI(fileContent);
 
         List<Transaction> transactions = transactionRespository.findAll();
-        statsManager.updateBalance(transactions);
+        if (viewRepository.count() > 0) statsManager.updateBalance(transactions);
+        else statsManager.calculateBalance(transactions);
         Map<YearMonth, Set<CategorizedMonthly>> calegorizedMonthly = statsManager.calculateCategorizedMonthly();
         statsManager.calculateBalanceMonthly(calegorizedMonthly);
         statsManager.calculateCategorized();
