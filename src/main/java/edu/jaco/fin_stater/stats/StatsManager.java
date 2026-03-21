@@ -176,7 +176,10 @@ public class StatsManager {
                 .filter(am -> am < 0.0)
                 .sum();
 
-        double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
+        double balance = transactions.stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .mapToDouble(tr -> tr.getAmount())
+                .sum();
 
         balanceAvarageRepository.save(new ViewAvarage(minTransactionDate.get().getDate(),
                 maxTransactionDate.get().getDate(),
@@ -202,7 +205,10 @@ public class StatsManager {
                 .filter(am -> am < 0.0)
                 .sum();
 
-        double balance = transactions.stream().mapToDouble(tr -> tr.getAmount()).sum();
+        double balance = transactions.stream()
+                .filter(tr -> tr.isUsedForCalculation())
+                .mapToDouble(tr -> tr.getAmount())
+                .sum();
 
         View view = viewRepository.findByViewName(currentView).get(0);
         view.setIncome(income);
