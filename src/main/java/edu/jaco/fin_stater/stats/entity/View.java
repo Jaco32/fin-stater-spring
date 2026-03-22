@@ -1,6 +1,8 @@
 package edu.jaco.fin_stater.stats.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -17,22 +19,42 @@ public class View {
     @Column(name = "to_date")
     private LocalDate toDate;
 
+    @Getter
+    @Setter
     private double income;
+
+    @Getter
+    @Setter
     private double expenses;
 
+    @Getter
+    @Setter
+    private double excluded;
+
+    @Getter
+    @Setter
     @Column(name = "period_balance")
     private double periodBalance;
 
+    @Getter
     @Column(name = "view_name")
     protected String viewName;
 
     public View() {}
 
-    public View(LocalDate from, LocalDate to, double income, double expenses, double periodBalance, String viewName) {
+    public View(LocalDate from,
+                LocalDate to,
+                double income,
+                double expenses,
+                double excluded,
+                double periodBalance,
+                String viewName)
+    {
         this.fromDate = from;
         this.toDate = to;
         this.income = income;
         this.expenses = expenses;
+        this.excluded = excluded;
         this.periodBalance = periodBalance;
         this.viewName = viewName;
     }
@@ -43,34 +65,6 @@ public class View {
 
     public LocalDate getTo() {
         return toDate;
-    }
-
-    public double getIncome() {
-        return income;
-    }
-
-    public void setIncome(double income) {
-        this.income = income;
-    }
-
-    public double getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(double expenses) {
-        this.expenses = expenses;
-    }
-
-    public double getPeriodBalance() {
-        return periodBalance;
-    }
-
-    public void setPeriodBalance(double periodBalance) {
-        this.periodBalance = periodBalance;
-    }
-
-    public String getViewName() {
-        return viewName;
     }
 
     @Override

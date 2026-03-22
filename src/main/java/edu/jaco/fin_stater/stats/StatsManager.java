@@ -176,6 +176,12 @@ public class StatsManager {
                 .filter(am -> am < 0.0)
                 .sum();
 
+        double excluded = transactions.stream()
+                .filter(tr -> !tr.isUsedForCalculation())
+                .mapToDouble(tr -> tr.getAmount())
+                .filter(am -> am < 0.0)
+                .sum();
+
         double balance = transactions.stream()
                 .filter(tr -> tr.isUsedForCalculation())
                 .mapToDouble(tr -> tr.getAmount())
@@ -185,6 +191,7 @@ public class StatsManager {
                 maxTransactionDate.get().getDate(),
                 income,
                 expenses,
+                excluded,
                 balance,
                 currentView,
                 0, 0, 0));
@@ -205,6 +212,12 @@ public class StatsManager {
                 .filter(am -> am < 0.0)
                 .sum();
 
+        double excluded = transactions.stream()
+                .filter(tr -> !tr.isUsedForCalculation())
+                .mapToDouble(tr -> tr.getAmount())
+                .filter(am -> am < 0.0)
+                .sum();
+
         double balance = transactions.stream()
                 .filter(tr -> tr.isUsedForCalculation())
                 .mapToDouble(tr -> tr.getAmount())
@@ -213,6 +226,7 @@ public class StatsManager {
         View view = viewRepository.findByViewName(currentView).get(0);
         view.setIncome(income);
         view.setExpenses(expenses);
+        view.setExcluded(excluded);
         view.setPeriodBalance(balance);
         viewRepository.save(view);
     }

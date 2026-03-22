@@ -86,6 +86,7 @@ public class UserController {
             "from_date date," +
             "income float(53) not null," +
             "period_balance float(53) not null," +
+            "excluded float(53) not null," +
             "to_date date," +
             "id bigint not null," +
             "dtype varchar(31) not null," +

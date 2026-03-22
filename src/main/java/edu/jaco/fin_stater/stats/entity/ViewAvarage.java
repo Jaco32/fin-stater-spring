@@ -23,13 +23,14 @@ public class ViewAvarage extends View {
                        LocalDate to,
                        double income,
                        double expenses,
+                       double excluded,
                        double balance,
                        String viewName,
                        double avgIncome,
                        double avgExpenses,
                        double avgBalance)
     {
-        super(from, to, income, expenses, balance, viewName);
+        super(from, to, income, expenses, excluded, balance, viewName);
         this.avarageIncome = avgIncome;
         this.avarageExpenses = avgExpenses;
         this.avarageBalance = avgBalance;
