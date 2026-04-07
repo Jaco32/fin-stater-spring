@@ -1,4 +1,4 @@
-package edu.jaco.fin_stater.dictionaries.cats.car;
+package edu.jaco.fin_stater.dictionaries.cats.transport;
 
 import edu.jaco.fin_stater.transaction.Transaction;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import java.util.Arrays;
 
 @AllArgsConstructor
-public enum AutoDictionary {
+public enum TransportDictionary {
 
     // Serwis
     DYNAMICA ("dynamica sp. z o.o."),
@@ -27,12 +27,23 @@ public enum AutoDictionary {
     ORLEN_2 ("stacja paliw nr 7578"),
     CIRCLE_K ("circle k"),
     STACJA_LIBIAZ ("stacja paliw nr 7011"),
-    A4_BRAMKI ("balice manual");
+    A4_BRAMKI ("balice manual"),
+
+    // Parkingi
+    PARKING_APCOA ("apcoa"),
+    PARKING_APCOA_2 ("parking 053"),
+    PARKING_GALERIA_KAZIMIERZ ("galeria kazimierz parking"),
+
+    // Bilety
+    JAK_DOJADE ("jakdojade.pl"),
+    MPK_KRAKOW ("mpk kraków"),
+    KASOWNIK_ZTP ("kasownik ztp krakow"),
+    INTERCITY ("intercity.pl");
 
     private String sentence;
 
     public static boolean matchTransactionRow(Transaction transaction) {
-        return Arrays.stream(AutoDictionary.values())
+        return Arrays.stream(TransportDictionary.values())
                 .anyMatch(dictIt ->
                      transaction.getAdditional_info()
                         .toLowerCase()

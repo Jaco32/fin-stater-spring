@@ -341,11 +341,13 @@ public class StatsManager {
                 cialoSubcategories.put(TransactionSubcategory.CIALO_OTHER, resultSubcategories.get(TransactionSubcategory.CIALO_OTHER));
                 categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), cialoSubcategories));
             }
-            else if (categoryEntry.getKey() == TransactionCategory.AUTO) {
+            else if (categoryEntry.getKey() == TransactionCategory.TRANSPORT) {
                 Map<TransactionSubcategory, Double> autoSubcategories = new HashMap<>();
-                autoSubcategories.put(TransactionSubcategory.AUTO_PALIWO, resultSubcategories.get(TransactionSubcategory.AUTO_PALIWO));
-                autoSubcategories.put(TransactionSubcategory.AUTO_SERWIS, resultSubcategories.get(TransactionSubcategory.AUTO_SERWIS));
-                autoSubcategories.put(TransactionSubcategory.AUTO_OTHER, resultSubcategories.get(TransactionSubcategory.AUTO_OTHER));
+                autoSubcategories.put(TransactionSubcategory.TRANSPORT_AUTO_PALIWO, resultSubcategories.get(TransactionSubcategory.TRANSPORT_AUTO_PALIWO));
+                autoSubcategories.put(TransactionSubcategory.TRANSPORT_AUTO_SERWIS, resultSubcategories.get(TransactionSubcategory.TRANSPORT_AUTO_SERWIS));
+                autoSubcategories.put(TransactionSubcategory.TRANSPORT_PARKING, resultSubcategories.get(TransactionSubcategory.TRANSPORT_PARKING));
+                autoSubcategories.put(TransactionSubcategory.TRANSPORT_BILETY, resultSubcategories.get(TransactionSubcategory.TRANSPORT_BILETY));
+                autoSubcategories.put(TransactionSubcategory.TRANSPORT_OTHER, resultSubcategories.get(TransactionSubcategory.TRANSPORT_OTHER));
                 categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), autoSubcategories));
             }
             else if (categoryEntry.getKey() == TransactionCategory.DZIECI) {

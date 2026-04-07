@@ -16,6 +16,7 @@ public enum SpozywczeDictionary {
     LIDL ("lidl"),
     AWITEKS ("awiteks"),
     KRAKOWSKIE_WYPIEKI_GALERIA ("krk wypieki stawowa"),
+    KRAKOWSKIE_WYPIEKI_KAPELANKA("krk wypieki tesco kapel"),
     WARZYWNIAK_LOKIETKA ("firma handlowa manhatta"),
     PYSZNE ("pyszne.pl"),
     MAXI_PIZZA ("maxipizza"),
@@ -53,6 +54,7 @@ public enum SpozywczeDictionary {
     FOODTRUCK ("wanesa katniak pb burge"),
     MARCHE_I_SEVI_KEBAB ("kuchnia marche/sevi keb"),
     MARCHE_I_SEVI_KEBAB_2 ("kuchnia marche sevi kebab"),
+    MARCHE_I_SEVI_KEBAB_3 ( "kuchnia marche sevi ke"),
     SEVI_KEBAB ("sevi kebab"),
     NAKIELNY ("nakielny"),
     AKASAKA ("akasaka"),
@@ -76,7 +78,14 @@ public enum SpozywczeDictionary {
     FOODSI ("www.foodsi.pl"),
     ZMACZENI ("zmaczeni"),
     LUNCH_BAR_WOLANSKI ("lunch bar wolanski"),
-    GLOVO ("glovoapp.com");
+    GLOVO ("glovoapp.com"),
+    MONIKA_DEMMON ("monika \"demmon\""),
+    AUTOMAT_HSBC("coffee break"),
+    BISTRO4MAT_UP ("bistro4mat up"),
+    DELI_SANDWICH ("deli sandwich kapelanka"),
+    RESTAURACJA_CGP ("restauracja cgp w budyn"),
+    AUTOSTRADA_A4 ("opł. za przejazd a4"),
+    MOJA_RESTO_BAR ("moja resto bar");
 
     private String sentence;
 

@@ -51,7 +51,7 @@ public class UserController {
         "category enum (" +
             "'SPOZYWCZE'," +
             "'CIALO'," +
-            "'AUTO'," +
+            "'TRANSPORT'," +
             "'OPLATY'," +
             "'DZIECI'," +
             "'DOM'," +
@@ -70,9 +70,11 @@ public class UserController {
             "'CIALO_HIGIENA'," +
             "'CIALO_BEAUTY'," +
             "'CIALO_OTHER'," +
-            "'AUTO_PALIWO'," +
-            "'AUTO_SERWIS'," +
-            "'AUTO_OTHER'," +
+            "'TRANSPORT_AUTO_PALIWO'," +
+            "'TRANSPORT_AUTO_SERWIS'," +
+            "'TRANSPORT_PARKING'," +
+            "'TRANSPORT_BILETY'," +
+            "'TRANSPORT_OTHER'," +
             "'DZIECI_PLACOWKI'," +
             "'DZIECI_OTHER'," +
             "'OPLATY_SUBSKRYPCJE'," +
@@ -108,7 +110,7 @@ public class UserController {
             "expense float(53) not null," +
             "id bigint not null," +
             "category enum (" +
-                "'AUTO'," +
+                "'TRANSPORT'," +
                 "'BANKOMAT'," +
                 "'DOM'," +
                 "'DZIECI'," +
@@ -131,7 +133,7 @@ public class UserController {
         "categorized_monthly_id bigint," +
         "id bigint not null," +
         "category enum (" +
-            "'AUTO'," +
+            "'TRANSPORT'," +
             "'BANKOMAT'," +
             "'DOM'," +
             "'DZIECI'," +
@@ -151,7 +153,7 @@ public class UserController {
 
     private final String categorizedSubcategoryTableSql = "create table categorized_subcategory_stat (" +
             "subcategory_stat float(53), " +
-            "subcategory_stat_key tinyint not null check (subcategory_stat_key between 0 and 15), " +
+            "subcategory_stat_key tinyint not null check (subcategory_stat_key between 0 and 17), " +
             "categorized_id bigint not null, " +
             "primary key (subcategory_stat_key, categorized_id))";
 

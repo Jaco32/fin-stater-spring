@@ -1,4 +1,4 @@
-package edu.jaco.fin_stater.dictionaries.cats.car.subcats;
+package edu.jaco.fin_stater.dictionaries.cats.transport.subcats;
 
 import edu.jaco.fin_stater.transaction.Transaction;
 import lombok.AllArgsConstructor;
