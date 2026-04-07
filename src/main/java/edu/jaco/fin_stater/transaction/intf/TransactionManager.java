@@ -13,6 +13,8 @@ import edu.jaco.fin_stater.dictionaries.cats.food.subcats.MarketyDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.food.subcats.SlodkosciDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.kids.DzieciDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.kids.subcats.PlacowkiDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.oplaty.OplatyDictionary;
+import edu.jaco.fin_stater.dictionaries.cats.oplaty.subcats.SubskrypcjeDictionary;
 import edu.jaco.fin_stater.dictionaries.freqs.*;
 import edu.jaco.fin_stater.dictionaries.cats.food.subcats.ZamawianeDictionary;
 import edu.jaco.fin_stater.transaction.*;
@@ -134,6 +136,8 @@ public abstract class TransactionManager {
             transactionRow.setSubcategory(TransactionSubcategory.CIALO_BEAUTY);
         } else if(PlacowkiDictionary.matchTransactionRow(transactionRow)) {
             transactionRow.setSubcategory(TransactionSubcategory.DZIECI_PLACOWKI);
+        } else if(SubskrypcjeDictionary.matchTransactionRow(transactionRow)) {
+            transactionRow.setSubcategory(TransactionSubcategory.OPLATY_SUBSKRYPCJE);
         } else {
             if(transactionRow.getCategory() == TransactionCategory.SPOZYWCZE)
                 transactionRow.setSubcategory(TransactionSubcategory.SPOZYWCZE_OTHER);
@@ -143,6 +147,8 @@ public abstract class TransactionManager {
                 transactionRow.setSubcategory(TransactionSubcategory.CIALO_OTHER);
             else if(transactionRow.getCategory() == TransactionCategory.DZIECI)
                 transactionRow.setSubcategory(TransactionSubcategory.DZIECI_OTHER);
+            else if(transactionRow.getCategory() == TransactionCategory.OPLATY)
+                transactionRow.setSubcategory(TransactionSubcategory.OPLATY_OTHER);
             else
                 transactionRow.setSubcategory(TransactionSubcategory.OTHER);
         }

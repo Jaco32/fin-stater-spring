@@ -7,6 +7,7 @@ import edu.jaco.fin_stater.stats.repo.BalanceMonthlyRepository;
 import edu.jaco.fin_stater.stats.repo.ViewRepository;
 import edu.jaco.fin_stater.stats.repo.CategorizedRepository;
 import edu.jaco.fin_stater.transaction.*;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class StatsManager {
     @Autowired
     ViewAvarageRepository balanceAvarageRepository;
 
-    private String currentView = "Full date range";
+    @Setter
+    private String currentView = "biedra_listopad";
 
     public StatsManager() {}
 
@@ -351,6 +353,12 @@ public class StatsManager {
                 dzieciSubcategories.put(TransactionSubcategory.DZIECI_PLACOWKI, resultSubcategories.get(TransactionSubcategory.DZIECI_PLACOWKI));
                 dzieciSubcategories.put(TransactionSubcategory.DZIECI_OTHER, resultSubcategories.get(TransactionSubcategory.DZIECI_OTHER));
                 categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), dzieciSubcategories));
+            }
+            else if (categoryEntry.getKey() == TransactionCategory.OPLATY) {
+                Map<TransactionSubcategory, Double> oplatySubcategories = new HashMap<>();
+                oplatySubcategories.put(TransactionSubcategory.OPLATY_SUBSKRYPCJE, resultSubcategories.get(TransactionSubcategory.OPLATY_SUBSKRYPCJE));
+                oplatySubcategories.put(TransactionSubcategory.OPLATY_OTHER, resultSubcategories.get(TransactionSubcategory.OPLATY_OTHER));
+                categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), oplatySubcategories));
             }
             else categorized.add(new Categorized(categoryEntry.getKey(), categoryEntry.getValue(), null));
         }

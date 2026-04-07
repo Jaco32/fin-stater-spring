@@ -14,5 +14,7 @@ public enum TransactionSubcategory {
     AUTO_OTHER,
     DZIECI_PLACOWKI,
     DZIECI_OTHER,
+    OPLATY_SUBSKRYPCJE,
+    OPLATY_OTHER,
     OTHER
 }

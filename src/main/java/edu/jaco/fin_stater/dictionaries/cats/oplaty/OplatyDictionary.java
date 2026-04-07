@@ -1,4 +1,4 @@
-package edu.jaco.fin_stater.dictionaries.cats;
+package edu.jaco.fin_stater.dictionaries.cats.oplaty;
 
 import edu.jaco.fin_stater.transaction.Transaction;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,8 @@ public enum OplatyDictionary {
     PARKING_1 ("zdmk krakow"),
     PARKING_2 ("property center parking"),
     PARKING_3 ("parkomat 3078"),
-    MICROSOFT ("microsoft");
+    MICROSOFT ("microsoft"),
+    SPOTIFY ("creators.spot");
 
     private String sentence;
 

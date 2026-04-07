@@ -75,6 +75,8 @@ public class UserController {
             "'AUTO_OTHER'," +
             "'DZIECI_PLACOWKI'," +
             "'DZIECI_OTHER'," +
+            "'OPLATY_SUBSKRYPCJE'," +
+            "'OPLATY_OTHER'," +
             "'OTHER'), " +
         "primary key (id))";
 
@@ -149,7 +151,7 @@ public class UserController {
 
     private final String categorizedSubcategoryTableSql = "create table categorized_subcategory_stat (" +
             "subcategory_stat float(53), " +
-            "subcategory_stat_key tinyint not null check (subcategory_stat_key between 0 and 13), " +
+            "subcategory_stat_key tinyint not null check (subcategory_stat_key between 0 and 15), " +
             "categorized_id bigint not null, " +
             "primary key (subcategory_stat_key, categorized_id))";
 

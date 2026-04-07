@@ -88,6 +88,14 @@ public class StatsController {
     }
 
     @CrossOrigin
+    @PatchMapping("view/switch/{name}")
+    public void switchView(@RequestHeader("mode") String mode, @PathVariable String name) {
+        logger.info("switchView - entered - name = " + name);
+        statsManager.setCurrentView(name);
+        logger.info("switchView - exiting");
+    }
+
+    @CrossOrigin
     @PatchMapping("clear")
     public void clearStats(@RequestHeader("mode") String mode) {
         logger.info("clearStats - entered");
