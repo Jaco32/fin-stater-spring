@@ -39,7 +39,7 @@ public class StatsManager {
     ViewAvarageRepository balanceAvarageRepository;
 
     @Setter
-    private String currentView = "biedra_listopad";
+    private String currentView = "Main";
 
     public StatsManager() {}
 

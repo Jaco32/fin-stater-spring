@@ -27,7 +27,6 @@ public enum TransportDictionary {
     ORLEN_2 ("stacja paliw nr 7578"),
     CIRCLE_K ("circle k"),
     STACJA_LIBIAZ ("stacja paliw nr 7011"),
-    A4_BRAMKI ("balice manual"),
 
     // Parkingi
     PARKING_APCOA ("apcoa"),
@@ -36,9 +35,12 @@ public enum TransportDictionary {
 
     // Bilety
     JAK_DOJADE ("jakdojade.pl"),
-    MPK_KRAKOW ("mpk kraków"),
+    MPK_KRAKOW_1("mpk kraków"),
+    MPK_KRAKOW_2("mpk krakow"),
     KASOWNIK_ZTP ("kasownik ztp krakow"),
-    INTERCITY ("intercity.pl");
+    INTERCITY ("intercity.pl"),
+    AUTOSTRADA_A4 ("opł. za przejazd a4"),
+    A4_BRAMKI ("balice manual");
 
     private String sentence;
 

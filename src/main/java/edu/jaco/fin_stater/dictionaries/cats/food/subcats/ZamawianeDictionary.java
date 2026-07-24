@@ -33,6 +33,7 @@ public enum ZamawianeDictionary {
     FOODTRUCK ("wanesa katniak pb burge"),
     MARCHE_I_SEVI_KEBAB ("kuchnia marche/sevi keb"),
     MARCHE_I_SEVI_KEBAB_2 ("kuchnia marche sevi kebab"),
+    MARCHE_I_SEVI_KEBAB_3 ( "kuchnia marche sevi ke"),
     SEVI_KEBAB ("sevi kebab"),
     AKASAKA ("akasaka"),
     PRIMA_GUSTO ("prima gusto"),

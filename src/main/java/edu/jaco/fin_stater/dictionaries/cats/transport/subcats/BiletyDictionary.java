@@ -9,9 +9,12 @@ import java.util.Arrays;
 public enum BiletyDictionary {
 
     JAK_DOJADE ("jakdojade.pl"),
-    MPK_KRAKOW ("mpk kraków"),
+    MPK_KRAKOW_1("mpk kraków"),
+    MPK_KRAKOW_2("mpk krakow"),
     KASOWNIK_ZTP ("kasownik ztp krakow"),
-    INTERCITY ("intercity.pl");
+    INTERCITY ("intercity.pl"),
+    AUTOSTRADA_A4 ("opł. za przejazd a4"),
+    A4_BRAMKI ("balice manual");
 
     private String sentence;
 

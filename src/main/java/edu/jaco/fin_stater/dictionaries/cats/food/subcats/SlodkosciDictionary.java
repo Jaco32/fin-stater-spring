@@ -15,7 +15,8 @@ public enum SlodkosciDictionary {
     LODY_U_MISKOW ("lody u miskow"),
     LODOWA_CHATKA ("lodowa chatka zielonki"),
     NAKIELNY ("nakielny"),
-    CUKIERNIA_ROZA ("cukiernia roza");
+    CUKIERNIA_ROZA ("cukiernia roza"),
+    GRYCAN("grycan");
 
     private String sentence;
 

@@ -79,13 +79,13 @@ public enum SpozywczeDictionary {
     ZMACZENI ("zmaczeni"),
     LUNCH_BAR_WOLANSKI ("lunch bar wolanski"),
     GLOVO ("glovoapp.com"),
-    MONIKA_DEMMON ("monika \"demmon\""),
+    MONIKA_DEMMON ("demmon"),
     AUTOMAT_HSBC("coffee break"),
     BISTRO4MAT_UP ("bistro4mat up"),
     DELI_SANDWICH ("deli sandwich kapelanka"),
     RESTAURACJA_CGP ("restauracja cgp w budyn"),
-    AUTOSTRADA_A4 ("opł. za przejazd a4"),
-    MOJA_RESTO_BAR ("moja resto bar");
+    MOJA_RESTO_BAR ("moja resto bar"),
+    GRYCAN("grycan");
 
     private String sentence;
 

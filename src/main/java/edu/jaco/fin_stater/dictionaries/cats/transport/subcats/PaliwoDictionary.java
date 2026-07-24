@@ -13,8 +13,7 @@ public enum PaliwoDictionary {
     ORLEN ("orlen"),
     ORLEN_2 ("stacja paliw nr 7578"),
     CIRCLE_K ("circle k"),
-    STACJA_LIBIAZ ("stacja paliw nr 7011"),
-    A4_BRAMKI ("balice manual");
+    STACJA_LIBIAZ ("stacja paliw nr 7011");
 
     private String sentence;
 

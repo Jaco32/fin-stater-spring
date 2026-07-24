@@ -2,6 +2,7 @@ package edu.jaco.fin_stater.user;
 
 import edu.jaco.fin_stater.transaction.TransactionRespository;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.Cookie;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
@@ -17,8 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("user")
@@ -212,11 +212,16 @@ public class UserController {
     }
 
     @CrossOrigin
-    @PostMapping("login/{name}/{password}")
-    public void loginUser(@RequestHeader("mode") String mode, @PathVariable String name, @PathVariable String password) {
-        logger.info("loginUser - entered with name: " + name);
-        String lookUpKey = "FIN_STATER_" + name.toUpperCase() + "_SCHEMA";
+    @PostMapping("login")
+    public Cookie loginUser(@RequestHeader("mode") String mode, @RequestBody String creds) {
+        logger.info("loginUser - entered");
+
+        String decodedCreds = new String(Base64.getDecoder().decode(creds));
+        String lookUpKey = "FIN_STATER_" + decodedCreds.split(":")[0].toUpperCase() + "_SCHEMA";
         userRoutingDataSource.setLookupKey(lookUpKey);
+
         logger.info("loginUser - exiting");
+
+        return new Cookie("session-id", UUID.randomUUID().toString());
     }
 }
