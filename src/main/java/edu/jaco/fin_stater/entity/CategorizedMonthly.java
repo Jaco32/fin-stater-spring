@@ -2,12 +2,13 @@ package edu.jaco.fin_stater.entity;
 
 import edu.jaco.fin_stater.transaction.enums.TransactionCategory;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "categorized_monthly")
 @NoArgsConstructor
+@Data
 public class CategorizedMonthly {
 
     @Id
@@ -17,31 +18,10 @@ public class CategorizedMonthly {
     @Enumerated(EnumType.STRING)
     private TransactionCategory category;
 
-    @Getter
     private double expense;
 
     public CategorizedMonthly(TransactionCategory category, double expense) {
         this.category = category;
-        this.expense = expense;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public TransactionCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(TransactionCategory category) {
-        this.category = category;
-    }
-
-    public void setExpense(double expense) {
         this.expense = expense;
     }
 }
