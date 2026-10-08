@@ -1,11 +1,14 @@
-package edu.jaco.fin_stater.transaction;
+package edu.jaco.fin_stater.controller;
 
 import com.opencsv.exceptions.CsvValidationException;
+import edu.jaco.fin_stater.entity.Transaction;
 import edu.jaco.fin_stater.stats.StatsManager;
-import edu.jaco.fin_stater.stats.entity.CategorizedMonthly;
-import edu.jaco.fin_stater.stats.repo.ViewRepository;
+import edu.jaco.fin_stater.entity.CategorizedMonthly;
+import edu.jaco.fin_stater.repo.ViewRepository;
+import edu.jaco.fin_stater.repo.TransactionRespository;
 import edu.jaco.fin_stater.transaction.impl.PkoBpTranzMgr;
 import edu.jaco.fin_stater.transaction.impl.SantanderTranzMgr;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +45,7 @@ public class TransactionController {
 
     @CrossOrigin
     @GetMapping()
-    public List<Transaction> getTransaction(@RequestHeader("mode") String mode) {
+    public List<Transaction> getTransaction() {
         logger.info("getTransaction - entered");
         return transactionRespository.findAll(Sort.by("date").descending());
     }
@@ -63,9 +66,11 @@ public class TransactionController {
     @PostMapping("upload/")
     public void uploadTransactions(@RequestHeader("mode") String mode,
                                    @RequestHeader("Content-Type") String contentType,
-                                   @RequestBody byte[] fileContent) throws CsvValidationException, IOException
+                                   @RequestBody byte[] fileContent,
+                                   HttpSession httpSession) throws CsvValidationException, IOException
     {
         logger.info("uploadTransactions - entered");
+
         if(contentType.equals("text/csv")) santanderTranzMgr.loadTransactionsFromAPI(fileContent);
         else pkoBpTranzMgr.loadTransactionsFromAPI(fileContent);
 

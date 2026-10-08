@@ -1,11 +1,13 @@
-package edu.jaco.fin_stater.stats.entity;
+package edu.jaco.fin_stater.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import lombok.Data;
 
 import java.time.LocalDate;
 
 @Entity
+@Data
 public class ViewAvarage extends View {
 
     @Column(name = "avarage_income")
@@ -34,39 +36,5 @@ public class ViewAvarage extends View {
         this.avarageIncome = avgIncome;
         this.avarageExpenses = avgExpenses;
         this.avarageBalance = avgBalance;
-    }
-
-    public double getAvarageIncome() {
-        return avarageIncome;
-    }
-
-    public double getAvarageExpenses() {
-        return avarageExpenses;
-    }
-
-    public double getAvarageBalance() {
-        return avarageBalance;
-    }
-
-    public void setAvarageIncome(double avarageIncome) {
-        this.avarageIncome = avarageIncome;
-    }
-
-    public void setAvarageExpenses(double avarageExpenses) {
-        this.avarageExpenses = avarageExpenses;
-    }
-
-    public void setAvarageBalance(double avarageBalance) {
-        this.avarageBalance = avarageBalance;
-    }
-
-    @Override
-    public String toString() {
-        return "ViewAvarage{" +
-                "avarageIncome=" + avarageIncome +
-                ", avarageExpenses=" + avarageExpenses +
-                ", avarageBalance=" + avarageBalance +
-                ", viewName='" + viewName + '\'' +
-                '}';
     }
 }

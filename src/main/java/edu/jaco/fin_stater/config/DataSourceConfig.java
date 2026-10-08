@@ -1,10 +1,11 @@
-package edu.jaco.fin_stater;
+package edu.jaco.fin_stater.config;
 
 import edu.jaco.fin_stater.user.UserRoutingDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
@@ -16,7 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class FinStatConfig {
+@EnableJpaRepositories
+public class DataSourceConfig {
 
     @Value("${DB_URL}")
     private String dbUrl;
@@ -29,6 +31,13 @@ public class FinStatConfig {
 
     @Value("${DB_DEFAULT_SCHEMA}")
     private String defaultSchema;
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+
+        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        return localContainerEntityManagerFactoryBean;
+    }
 
     @Bean
     public DataSource routingDataSource() {

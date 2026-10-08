@@ -20,15 +20,14 @@ public class FinStaterApplication {
 	@Bean
 	public CommandLineRunner printBeans(ApplicationContext ctx) {
 		return (args) -> {
-			System.out.println("Bean names:");
-			String[] beanNames = ctx.getBeanDefinitionNames();
-			Arrays.sort(beanNames);
-			int i = 1;
-			for (String beanName : beanNames) {
-				System.out.println(i + ": " + beanName);
-				i++;
-			}
+			//System.out.println("Bean names:");
+			//String[] beanNames = ctx.getBeanDefinitionNames();
+			//Arrays.sort(beanNames);
+			//int i = 1;
+			//for (String beanName : beanNames) {
+			//	System.out.println(i + ": " + beanName);
+			//	i++;
+			//}
 		};
 	}
-
 }
