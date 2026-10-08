@@ -7,6 +7,8 @@ import edu.jaco.fin_stater.stats.repo.BalanceMonthlyRepository;
 import edu.jaco.fin_stater.stats.repo.ViewRepository;
 import edu.jaco.fin_stater.stats.repo.CategorizedRepository;
 import edu.jaco.fin_stater.transaction.*;
+import edu.jaco.fin_stater.transaction.enums.TransactionCategory;
+import edu.jaco.fin_stater.transaction.enums.TransactionSubcategory;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

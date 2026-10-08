@@ -19,10 +19,12 @@ import edu.jaco.fin_stater.dictionaries.cats.oplaty.OplatyDictionary;
 import edu.jaco.fin_stater.dictionaries.cats.oplaty.subcats.SubskrypcjeDictionary;
 import edu.jaco.fin_stater.dictionaries.freqs.*;
 import edu.jaco.fin_stater.dictionaries.cats.food.subcats.ZamawianeDictionary;
-import edu.jaco.fin_stater.transaction.*;
 import com.opencsv.exceptions.CsvValidationException;
 import edu.jaco.fin_stater.transaction.Transaction;
 import edu.jaco.fin_stater.transaction.TransactionRespository;
+import edu.jaco.fin_stater.transaction.enums.TransactionCategory;
+import edu.jaco.fin_stater.transaction.enums.TransactionFrequency;
+import edu.jaco.fin_stater.transaction.enums.TransactionSubcategory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package edu.jaco.fin_stater.stats.entity;
 
-import edu.jaco.fin_stater.transaction.TransactionCategory;
+import edu.jaco.fin_stater.transaction.enums.TransactionCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
