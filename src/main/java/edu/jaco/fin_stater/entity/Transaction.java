@@ -1,4 +1,4 @@
-package edu.jaco.fin_stater.transaction;
+package edu.jaco.fin_stater.entity;
 
 import edu.jaco.fin_stater.transaction.enums.TransactionCategory;
 import edu.jaco.fin_stater.transaction.enums.TransactionFrequency;

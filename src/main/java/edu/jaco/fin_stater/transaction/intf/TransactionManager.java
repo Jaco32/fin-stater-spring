@@ -20,8 +20,8 @@ import edu.jaco.fin_stater.dictionaries.cats.oplaty.subcats.SubskrypcjeDictionar
 import edu.jaco.fin_stater.dictionaries.freqs.*;
 import edu.jaco.fin_stater.dictionaries.cats.food.subcats.ZamawianeDictionary;
 import com.opencsv.exceptions.CsvValidationException;
-import edu.jaco.fin_stater.transaction.Transaction;
-import edu.jaco.fin_stater.transaction.TransactionRespository;
+import edu.jaco.fin_stater.entity.Transaction;
+import edu.jaco.fin_stater.repo.TransactionRespository;
 import edu.jaco.fin_stater.transaction.enums.TransactionCategory;
 import edu.jaco.fin_stater.transaction.enums.TransactionFrequency;
 import edu.jaco.fin_stater.transaction.enums.TransactionSubcategory;

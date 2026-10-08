@@ -1,6 +1,6 @@
 package edu.jaco.fin_stater.dictionaries.cats.kids;
 
-import edu.jaco.fin_stater.transaction.Transaction;
+import edu.jaco.fin_stater.entity.Transaction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

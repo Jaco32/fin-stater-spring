@@ -1,7 +1,6 @@
 package edu.jaco.fin_stater.config;
 
 import edu.jaco.fin_stater.user.UserRoutingDataSource;
-import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +18,7 @@ import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories
-public class FinStatConfig {
+public class DataSourceConfig {
 
     @Value("${DB_URL}")
     private String dbUrl;

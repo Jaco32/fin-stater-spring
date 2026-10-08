@@ -1,7 +1,8 @@
-package edu.jaco.fin_stater.user;
+package edu.jaco.fin_stater.controller;
 
-import edu.jaco.fin_stater.transaction.Transaction;
-import edu.jaco.fin_stater.transaction.TransactionRespository;
+import edu.jaco.fin_stater.entity.Transaction;
+import edu.jaco.fin_stater.repo.TransactionRespository;
+import edu.jaco.fin_stater.user.UserRoutingDataSource;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -253,6 +254,8 @@ public class UserController {
         dataSourceBuilder.username(adminUser);
         dataSourceBuilder.password(adminUserPassword);
         DataSource userDataSource = dataSourceBuilder.build();
+
+        SimpleJpaRepository
 
         RepositoryFactorySupport jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
         TransactionRespository userTransactionRespository = jpaRepositoryFactory.getRepository(TransactionRespository.class);

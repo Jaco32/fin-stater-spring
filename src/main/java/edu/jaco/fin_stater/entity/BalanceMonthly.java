@@ -1,4 +1,4 @@
-package edu.jaco.fin_stater.stats.entity;
+package edu.jaco.fin_stater.entity;
 
 import jakarta.persistence.*;
 import java.util.List;
