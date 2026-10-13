@@ -1,6 +1,7 @@
 package edu.jaco.fin_stater.controller;
 
 import com.opencsv.exceptions.CsvValidationException;
+import edu.jaco.fin_stater.config.UserRoutingDataSource;
 import edu.jaco.fin_stater.entity.Transaction;
 import edu.jaco.fin_stater.stats.StatsManager;
 import edu.jaco.fin_stater.entity.CategorizedMonthly;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -43,10 +45,14 @@ public class TransactionController {
     @Autowired
     private ViewRepository viewRepository;
 
+    @Autowired
+    private UserRoutingDataSource userRoutingDataSource;
+
     @CrossOrigin
     @GetMapping()
-    public List<Transaction> getTransaction() {
-        logger.info("getTransaction - entered");
+    public List<Transaction> getTransaction(Authentication authentication) {
+        logger.info("getTransaction - entered - user name is: {}", authentication.getName());
+        userRoutingDataSource.setLookupKey(authentication.getName().toUpperCase());
         return transactionRespository.findAll(Sort.by("date").descending());
     }
 

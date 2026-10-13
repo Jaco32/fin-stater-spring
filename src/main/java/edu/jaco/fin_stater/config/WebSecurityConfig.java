@@ -1,5 +1,6 @@
 package edu.jaco.fin_stater.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,7 +32,7 @@ public class WebSecurityConfig {
                         authorize.requestMatchers(HttpMethod.PATCH, "/stat/view/*", "/stat/clear").permitAll()
                 )
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/stat/view/switch/*").permitAll())
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/transaction/upload/", "/transaction/add/").hasAnyRole("USER").anyRequest().authenticated());
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/transaction/upload/", "/transaction/add/").permitAll());
 
         return httpSecurity.build();
     }
@@ -42,7 +43,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public UserDetailsManager jdbcUserDetailsManager(DataSource dataSource, PasswordEncoder passwordEncoder)
+    public UserDetailsManager jdbcUserDetailsManager(@Qualifier("userDetailsManagerDataSource") DataSource dataSource)
     {
         return new JdbcUserDetailsManager(dataSource);
     }

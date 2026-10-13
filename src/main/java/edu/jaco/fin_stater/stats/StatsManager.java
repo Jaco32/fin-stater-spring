@@ -158,11 +158,14 @@ public class StatsManager {
     }
 
     public void calculateBalance(List<Transaction> transactions) {
-        logger.info("calculateBalance - entered");
+        logger.info("calculateBalance - entered, number of transactions: {}", transactions.size());
+        logger.info("example row: {}", transactions.get(0));
 
         Comparator<Transaction> transactionDateComparator = Comparator.comparing(Transaction::getDate);
         Optional<Transaction> minTransactionDate = transactions.stream().min(transactionDateComparator);
         Optional<Transaction> maxTransactionDate = transactions.stream().max(transactionDateComparator);
+
+        logger.info("calculateBalance - calculater period - minDate: {}, maxDate: {}", minTransactionDate.get(), maxTransactionDate.get());
 
         double income = transactions.stream()
                 .filter(tr -> tr.isUsedForCalculation())
@@ -381,7 +384,7 @@ public class StatsManager {
         logger.info("calculateBalanceAvarage - Views count: " + views.size());
 
         View view = views.get(0);
-        Period period = Period.between(view.getFrom_date(), view.getTo());
+        Period period = Period.between(view.getFromDate(), view.getToDate());
         long monthsCount = period.getYears()*12 + period.getMonths();
         if (period.getDays() > 0) monthsCount++;
         double avgIncome = view.getIncome()/monthsCount;

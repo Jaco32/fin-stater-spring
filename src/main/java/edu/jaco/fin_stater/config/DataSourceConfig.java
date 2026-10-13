@@ -1,11 +1,10 @@
 package edu.jaco.fin_stater.config;
 
-import edu.jaco.fin_stater.user.UserRoutingDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
@@ -16,8 +15,8 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Configuration
-@EnableJpaRepositories
 public class DataSourceConfig {
 
     @Value("${DB_URL}")
@@ -31,13 +30,6 @@ public class DataSourceConfig {
 
     @Value("${DB_DEFAULT_SCHEMA}")
     private String defaultSchema;
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-
-        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        return localContainerEntityManagerFactoryBean;
-    }
 
     @Bean
     public DataSource routingDataSource() {
@@ -56,6 +48,15 @@ public class DataSourceConfig {
         userRoutingDataSource.setDefaultTargetDataSource(dsDefault);
 
         return userRoutingDataSource;
+    }
+
+    @Bean(defaultCandidate = false)
+    public DataSource userDetailsManagerDataSource() {
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.url(dbUrl + ";SCHEMA=" + defaultSchema);
+        dataSourceBuilder.username(user);
+        dataSourceBuilder.password(password);
+        return dataSourceBuilder.build();
     }
 
     @Bean
@@ -77,8 +78,8 @@ public class DataSourceConfig {
                 dataSourceBuilder.username(user);
                 dataSourceBuilder.password(password);
                 DataSource newDs = dataSourceBuilder.build();
-                System.out.println("Adding " + dbUrl + ";SCHEMA=" + schema);
-                dsCopy.put(schema, newDs);
+                log.info("Adding {}", schema.split("_")[2]);
+                dsCopy.put(schema.split("_")[2], newDs);
             }
         }
         routingDataSource.setTargetDataSources(dsCopy);

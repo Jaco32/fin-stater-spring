@@ -2,12 +2,14 @@ package edu.jaco.fin_stater.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class ViewAvarage extends View {
 
     @Column(name = "avarage_income")

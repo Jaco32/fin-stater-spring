@@ -1,8 +1,6 @@
 package edu.jaco.fin_stater.controller;
 
-import edu.jaco.fin_stater.entity.Transaction;
-import edu.jaco.fin_stater.repo.TransactionRespository;
-import edu.jaco.fin_stater.user.UserRoutingDataSource;
+import edu.jaco.fin_stater.config.UserRoutingDataSource;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -13,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
-import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,9 +33,6 @@ public class UserController {
 
     @Autowired
     private EntityManager entityManager;
-
-    @Autowired
-    private TransactionRespository transactionRespository;
 
     @Autowired
     private UserRoutingDataSource userRoutingDataSource;
@@ -191,6 +183,8 @@ public class UserController {
         String name = decodedCreds.split(":")[0];
         String password = decodedCreds.split(":")[1];
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities = new HashSet<>();
+        simpleGrantedAuthorities.add(new SimpleGrantedAuthority("AUTHORITY_READ"));
+        simpleGrantedAuthorities.add(new SimpleGrantedAuthority("AUTHORITY_WRITE"));
         User newUser = new User(name, passwordEncoder.encode(password), simpleGrantedAuthorities);
         jdbcUserDetailsManager.createUser(newUser);
 
@@ -202,6 +196,7 @@ public class UserController {
                 //statement.execute("create user " + name + " password '" + password + "'");
                 String schemaName = "fin_stater_" + name + "_schema";
                 statement.execute("create schema " + schemaName/* + " authorization " + name*/);
+
                 statement.execute(String.format(transactionTableSql, schemaName));
                 statement.execute(String.format("create sequence %s.transaction_seq start with 1 increment by 50", schemaName));
 
@@ -222,14 +217,15 @@ public class UserController {
 
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.url(dbUrl + ";SCHEMA=FIN_STATER_" + name + "_SCHEMA");
-        dataSourceBuilder.username(name);
-        dataSourceBuilder.password(password);
+        dataSourceBuilder.username(adminUser);
+        dataSourceBuilder.password(adminUserPassword);
         DataSource newDs = dataSourceBuilder.build();
 
         Map<Object, DataSource> currentDataSources = userRoutingDataSource.getResolvedDataSources();
         Map<Object, Object> dsCopy = new HashMap<>(currentDataSources);
         dsCopy.put(name.toUpperCase(), newDs);
         userRoutingDataSource.setTargetDataSources(dsCopy);
+        userRoutingDataSource.afterPropertiesSet();
 
         logger.info("createUser - exiting");
     }
@@ -237,8 +233,7 @@ public class UserController {
     @CrossOrigin(allowCredentials = "true", origins = "http://localhost:3000")
     @PostMapping("login")
     public void loginUser(HttpSession httpSession,
-                          HttpServletResponse httpServletResponse,
-                          Authentication authentication)
+                          HttpServletResponse httpServletResponse)
     {
         logger.info("loginUser - entered");
 
@@ -246,22 +241,6 @@ public class UserController {
                 HttpHeaders.SET_COOKIE,
                 httpServletResponse.getHeader(HttpHeaders.SET_COOKIE) + "; Secure; SameSite=None"
         );
-
-        String schema = "FIN_STATER_" + authentication.getName().toUpperCase() + "_SCHEMA";
-
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.url(dbUrl + ";SCHEMA=" + schema);
-        dataSourceBuilder.username(adminUser);
-        dataSourceBuilder.password(adminUserPassword);
-        DataSource userDataSource = dataSourceBuilder.build();
-
-        SimpleJpaRepository
-
-        RepositoryFactorySupport jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
-        TransactionRespository userTransactionRespository = jpaRepositoryFactory.getRepository(TransactionRespository.class);
-
-        Transaction t = new Transaction();
-        userTransactionRespository.save(t);
 
         logger.info("loginUser - exiting");
     }
