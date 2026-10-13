@@ -72,8 +72,7 @@ public class TransactionController {
     @PostMapping("upload/")
     public void uploadTransactions(@RequestHeader("mode") String mode,
                                    @RequestHeader("Content-Type") String contentType,
-                                   @RequestBody byte[] fileContent,
-                                   HttpSession httpSession) throws CsvValidationException, IOException
+                                   @RequestBody byte[] fileContent) throws CsvValidationException, IOException
     {
         logger.info("uploadTransactions - entered");
 
@@ -93,8 +92,8 @@ public class TransactionController {
     @CrossOrigin
     @PostMapping("add/")
     public void addTransactions(@RequestHeader("mode") String mode,
-                                   @RequestHeader("Content-Type") String contentType,
-                                   @RequestBody byte[] fileContent) throws CsvValidationException, IOException
+                                @RequestHeader("Content-Type") String contentType,
+                                @RequestBody byte[] fileContent) throws CsvValidationException, IOException
     {
         logger.info("addTransactions - entered");
         if(contentType.equals("text/csv")) santanderTranzMgr.loadTransactionsFromAPI(fileContent);
