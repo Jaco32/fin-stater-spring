@@ -1,6 +1,6 @@
 package edu.jaco.fin_stater.transaction.impl;
 
-import edu.jaco.fin_stater.transaction.Transaction;
+import edu.jaco.fin_stater.entity.Transaction;
 import edu.jaco.fin_stater.transaction.TransactionSpecification;
 import edu.jaco.fin_stater.transaction.intf.TransactionManager;
 import org.apache.poi.ss.usermodel.DateUtil;

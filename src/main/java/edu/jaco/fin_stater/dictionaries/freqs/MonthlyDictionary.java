@@ -1,6 +1,6 @@
 package edu.jaco.fin_stater.dictionaries.freqs;
 
-import edu.jaco.fin_stater.transaction.Transaction;
+import edu.jaco.fin_stater.entity.Transaction;
 
 import java.util.Arrays;
 

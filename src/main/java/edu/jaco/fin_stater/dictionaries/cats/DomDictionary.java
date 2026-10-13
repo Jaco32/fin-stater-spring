@@ -1,6 +1,6 @@
 package edu.jaco.fin_stater.dictionaries.cats;
 
-import edu.jaco.fin_stater.transaction.Transaction;
+import edu.jaco.fin_stater.entity.Transaction;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;

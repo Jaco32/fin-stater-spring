@@ -1,7 +1,7 @@
 package edu.jaco.fin_stater.transaction.impl;
 
-import edu.jaco.fin_stater.transaction.Transaction;
-import edu.jaco.fin_stater.transaction.TransactionRespository;
+import edu.jaco.fin_stater.entity.Transaction;
+import edu.jaco.fin_stater.repo.TransactionRespository;
 import edu.jaco.fin_stater.transaction.TransactionSpecification;
 import edu.jaco.fin_stater.transaction.intf.TransactionManager;
 import com.opencsv.CSVParser;

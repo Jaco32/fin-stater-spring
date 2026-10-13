@@ -1,4 +1,4 @@
-package edu.jaco.fin_stater.transaction;
+package edu.jaco.fin_stater.transaction.enums;
 
 public enum TransactionCategory {
     SPOZYWCZE,

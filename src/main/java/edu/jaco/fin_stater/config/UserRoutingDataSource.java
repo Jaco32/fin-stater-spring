@@ -1,4 +1,4 @@
-package edu.jaco.fin_stater.user;
+package edu.jaco.fin_stater.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;

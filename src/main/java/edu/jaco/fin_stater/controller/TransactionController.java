@@ -1,15 +1,20 @@
-package edu.jaco.fin_stater.transaction;
+package edu.jaco.fin_stater.controller;
 
 import com.opencsv.exceptions.CsvValidationException;
+import edu.jaco.fin_stater.config.UserRoutingDataSource;
+import edu.jaco.fin_stater.entity.Transaction;
 import edu.jaco.fin_stater.stats.StatsManager;
-import edu.jaco.fin_stater.stats.entity.CategorizedMonthly;
-import edu.jaco.fin_stater.stats.repo.ViewRepository;
+import edu.jaco.fin_stater.entity.CategorizedMonthly;
+import edu.jaco.fin_stater.repo.ViewRepository;
+import edu.jaco.fin_stater.repo.TransactionRespository;
 import edu.jaco.fin_stater.transaction.impl.PkoBpTranzMgr;
 import edu.jaco.fin_stater.transaction.impl.SantanderTranzMgr;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -40,10 +45,14 @@ public class TransactionController {
     @Autowired
     private ViewRepository viewRepository;
 
+    @Autowired
+    private UserRoutingDataSource userRoutingDataSource;
+
     @CrossOrigin
     @GetMapping()
-    public List<Transaction> getTransaction(@RequestHeader("mode") String mode) {
-        logger.info("getTransaction - entered");
+    public List<Transaction> getTransaction(Authentication authentication) {
+        logger.info("getTransaction - entered - user name is: {}", authentication.getName());
+        userRoutingDataSource.setLookupKey(authentication.getName().toUpperCase());
         return transactionRespository.findAll(Sort.by("date").descending());
     }
 
@@ -66,6 +75,7 @@ public class TransactionController {
                                    @RequestBody byte[] fileContent) throws CsvValidationException, IOException
     {
         logger.info("uploadTransactions - entered");
+
         if(contentType.equals("text/csv")) santanderTranzMgr.loadTransactionsFromAPI(fileContent);
         else pkoBpTranzMgr.loadTransactionsFromAPI(fileContent);
 
@@ -82,8 +92,8 @@ public class TransactionController {
     @CrossOrigin
     @PostMapping("add/")
     public void addTransactions(@RequestHeader("mode") String mode,
-                                   @RequestHeader("Content-Type") String contentType,
-                                   @RequestBody byte[] fileContent) throws CsvValidationException, IOException
+                                @RequestHeader("Content-Type") String contentType,
+                                @RequestBody byte[] fileContent) throws CsvValidationException, IOException
     {
         logger.info("addTransactions - entered");
         if(contentType.equals("text/csv")) santanderTranzMgr.loadTransactionsFromAPI(fileContent);

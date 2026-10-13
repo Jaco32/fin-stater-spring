@@ -1,5 +1,6 @@
 package edu.jaco.fin_stater.transaction;
 
+import edu.jaco.fin_stater.entity.Transaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;

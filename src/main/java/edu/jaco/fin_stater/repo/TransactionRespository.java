@@ -1,5 +1,6 @@
-package edu.jaco.fin_stater.transaction;
+package edu.jaco.fin_stater.repo;
 
+import edu.jaco.fin_stater.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

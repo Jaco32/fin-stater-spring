@@ -1,6 +1,6 @@
-package edu.jaco.fin_stater;
+package edu.jaco.fin_stater.config;
 
-import edu.jaco.fin_stater.user.UserRoutingDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +15,9 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Configuration
-public class FinStatConfig {
+public class DataSourceConfig {
 
     @Value("${DB_URL}")
     private String dbUrl;
@@ -49,6 +50,15 @@ public class FinStatConfig {
         return userRoutingDataSource;
     }
 
+    @Bean(defaultCandidate = false)
+    public DataSource userDetailsManagerDataSource() {
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.url(dbUrl + ";SCHEMA=" + defaultSchema);
+        dataSourceBuilder.username(user);
+        dataSourceBuilder.password(password);
+        return dataSourceBuilder.build();
+    }
+
     @Bean
     public Integer initRoutingDs(LocalContainerEntityManagerFactoryBean entityManagerFactory,
                                  UserRoutingDataSource routingDataSource)
@@ -68,8 +78,8 @@ public class FinStatConfig {
                 dataSourceBuilder.username(user);
                 dataSourceBuilder.password(password);
                 DataSource newDs = dataSourceBuilder.build();
-                System.out.println("Adding " + dbUrl + ";SCHEMA=" + schema);
-                dsCopy.put(schema, newDs);
+                log.info("Adding {}", schema.split("_")[2]);
+                dsCopy.put(schema.split("_")[2], newDs);
             }
         }
         routingDataSource.setTargetDataSources(dsCopy);
